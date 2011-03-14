@@ -1,11 +1,12 @@
+package uk.ac.ucl.cs.clonedetector.program;
 import java.io.*;
 import java.security.*;
 import java.util.ArrayList;
 import java.math.*;
 
 
+
 public class CloneDetector {
-	public enum FingerprintMethod {MD5_HASH};
 
 
 	public void findClones(String filename) throws FileNotFoundException, IOException {
@@ -15,7 +16,7 @@ public class CloneDetector {
 		
 		while ((line = in.readLine()) != null) {
 			String processedLine = stripWhitespace(line);
-			BigInteger fingerprint = computeFingerprint(processedLine, FingerprintMethod.MD5_HASH);
+			BigInteger fingerprint = computeFingerprint(processedLine, "MD5");
 			fingerprints.add(fingerprint);
 		}
 		
@@ -49,19 +50,19 @@ public class CloneDetector {
 
 	}
 	
-	public static BigInteger computeFingerprint(String line, FingerprintMethod method) {
+	public static BigInteger computeFingerprint(String line, String algorithm) {
 		if (line.equals("")) return BigInteger.ZERO;
 		
 		BigInteger fingerprint = null;
-		if (method == FingerprintMethod.MD5_HASH) {
-			try {
-				MessageDigest m = MessageDigest.getInstance("MD5");
-				m.update(line.getBytes(), 0, line.length());
-				fingerprint = new BigInteger(1,m.digest());
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			}
+
+		try {
+			MessageDigest m = MessageDigest.getInstance(algorithm);
+			m.update(line.getBytes(), 0, line.length());
+			fingerprint = new BigInteger(1,m.digest());
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
 		}
+
 		return fingerprint;
 	}
 	

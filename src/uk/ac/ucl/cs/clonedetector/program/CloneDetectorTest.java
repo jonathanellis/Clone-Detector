@@ -1,3 +1,4 @@
+package uk.ac.ucl.cs.clonedetector.program;
 
 import static org.junit.Assert.*;
 
@@ -29,8 +30,8 @@ public class CloneDetectorTest {
 	
 	@Test
 	public void test_computeFingerprint() {
-		assertEquals(CloneDetector.computeFingerprint("", CloneDetector.FingerprintMethod.MD5_HASH), BigInteger.ZERO);
-		//assertEquals(CloneDetector.computeFingerprint("%hello_2819£%^", CloneDetector.FingerprintMethod.MD5_HASH), new BigInteger());
+		assertEquals(CloneDetector.computeFingerprint("", "MD5"), BigInteger.ZERO);
+		//assertEquals(CloneDetector.computeFingerprint("%hello_2819£%^", "MD5"), new BigInteger());
 	}
 
 
