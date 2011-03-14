@@ -1,0 +1,25 @@
+cat
+dog mouse
+
+
+horse
+
+
+dog
+mouse dog
+	
+
+lion
+
+
+
+lion
+
+
+
+tiger
+	
+
+dog                    mouse
+
+         
