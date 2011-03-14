@@ -14,20 +14,35 @@ public class CloneDetector {
 		ArrayList<BigInteger> fingerprints = new ArrayList<BigInteger>();
 		
 		while ((line = in.readLine()) != null) {
-			String processedLine;
-			processedLine = stripWhitespace(line);
-			
+			String processedLine = stripWhitespace(line);
 			BigInteger fingerprint = computeFingerprint(processedLine, FingerprintMethod.MD5_HASH);
-
 			fingerprints.add(fingerprint);
 		}
 		
 		// Build comparison matrix between hashes:
 		for (int i=0; i<fingerprints.size(); i++) {
-			for (int j=0; j<i; j++) {
+
+
+			for (int j=0; j<i; j++) { // check line i against all lines before it
 				BigInteger fi = fingerprints.get(i);
 				BigInteger fj = fingerprints.get(j);
-				if (fi.equals(fj) && !fi.equals(BigInteger.ZERO)) System.out.println("clone found! " + (i+1) + ":" + (j+1));
+				int jStart = j+1;
+				int jLength = 0;
+				int iStart = i+1;
+				while (fi.equals(fj) && !fi.equals(BigInteger.ZERO)) {
+					// Start of a clone:
+					i++;
+					j++;
+					fi = fingerprints.get(i);
+					fj = fingerprints.get(j);
+					jLength++;
+				}
+				if (jLength > 0) {
+					int jEnd = jStart + jLength-1;
+					int iEnd = iStart + jLength-1;
+					System.out.println(jStart + ":" + jEnd + "-" + iStart + ":" + iEnd);
+				}
+					
 			}
 			
 		}

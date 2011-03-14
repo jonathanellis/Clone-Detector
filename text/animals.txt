@@ -7,13 +7,24 @@ horse
 
 dog
 mouse dog
+dog
 	
 
 lion
+monkey                    tiger
+goat
 
+elephant
+
+
+
+
+sheep            horse
 
 
 lion
+monkey    tiger
+goat
 
 
 
