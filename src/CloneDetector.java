@@ -7,7 +7,8 @@ import java.math.*;
 public class CloneDetector {
 	public enum FingerprintMethod {MD5_HASH};
 
-	public CloneDetector(String filename) throws FileNotFoundException, IOException {
+
+	public void findClones(String filename) throws FileNotFoundException, IOException {
 		BufferedReader in = new BufferedReader(new FileReader(filename));
 		String line;
 		ArrayList<BigInteger> fingerprints = new ArrayList<BigInteger>();
@@ -16,15 +17,8 @@ public class CloneDetector {
 			String processedLine;
 			processedLine = stripWhitespace(line);
 			
-			BigInteger fingerprint;
-			if (processedLine.equals("")) {
-				fingerprint = BigInteger.ZERO;
-			} else {
-				fingerprint = computeFingerprint(processedLine, FingerprintMethod.MD5_HASH);
-			}
-			
-			//System.out.println(processedLine + " " + fingerprint);
-			
+			BigInteger fingerprint = computeFingerprint(processedLine, FingerprintMethod.MD5_HASH);
+
 			fingerprints.add(fingerprint);
 		}
 		
@@ -33,7 +27,6 @@ public class CloneDetector {
 			for (int j=0; j<i; j++) {
 				BigInteger fi = fingerprints.get(i);
 				BigInteger fj = fingerprints.get(j);
-				//System.out.println(fi);
 				if (fi.equals(fj) && !fi.equals(BigInteger.ZERO)) System.out.println("clone found! " + (i+1) + ":" + (j+1));
 			}
 			
@@ -41,7 +34,9 @@ public class CloneDetector {
 
 	}
 	
-	public BigInteger computeFingerprint(String line, FingerprintMethod method) {
+	public static BigInteger computeFingerprint(String line, FingerprintMethod method) {
+		if (line.equals("")) return BigInteger.ZERO;
+		
 		BigInteger fingerprint = null;
 		if (method == FingerprintMethod.MD5_HASH) {
 			try {
@@ -55,7 +50,7 @@ public class CloneDetector {
 		return fingerprint;
 	}
 	
-	public String stripWhitespace(String line) {
+	public static String stripWhitespace(String line) {
 		String newLine;
 		newLine = line.replaceAll(" ", "");
 		newLine = newLine.replaceAll("\t", "");
@@ -65,11 +60,12 @@ public class CloneDetector {
 	}
 	
 	public static void main(String[] args) {
+		CloneDetector cd = new CloneDetector();
 		if (args.length < 1) {
 			System.out.println("Missing filename");
 		} else {
 			try {
-				new CloneDetector(args[0]);
+				cd.findClones(args[0]);
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found!");
 			} catch (IOException e) {
