@@ -2,37 +2,53 @@
 	<description>
 		Line-based clone detector to detect clones within a single file.
 	</description>
-	
+
 	<!-- set global properties for this build -->
-	<property name="src" location="src"/>
-	<property name="build" location="build"/>
-	<property name="dist" location="dist"/>
-	
+	<property name="src.dir" location="src" />
+	<property name="lib.dir" value="lib" />
+	<property name="build.dir" location="build" />
+	<property name="javadoc.dir" value="javadoc" />
+	<property name="dist.dir" location="dist" />
+	<property name="debug" value="on" />
+
+
+	<path id="classpath">
+		<pathelement location="${build.dir}" />
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build.dir}" quiet="true" />
+		<delete dir="${dist.dir}" quiet="true" />
+	</target>
+
 	<target name="init">
 		<!-- Create the time stamp -->
-		<tstamp/>
+		<tstamp />
 		<!-- Create the build directory structure used by compile -->
-		<mkdir dir="${build}"/>
+		<mkdir dir="${build.dir}" />
 	</target>
 
-	<target name="compile" depends="init" description="compile the source " >
-		<javac srcdir="${src}" destdir="${build}"/>
+	<target name="compile" depends="init" description="compile the source ">
+		<javac debug="${debug}" source="1.5" classpathref="classpath" destdir="${build.dir}">
+			<src path="${src.dir}" />
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
 	</target>
 
-	<target name="dist" depends="compile" description="generate the distribution" >
-		<delete file="${dist}/lib/clone.jar" />
-		<mkdir dir="${dist}/lib"/>
-		<jar jarfile="${dist}/lib/clone.jar" basedir="${build}"/>
+	<target name="dist" depends="compile" description="generate the distribution">
+		<delete file="${dist.dir}/lib/clone.jar" />
+		<mkdir dir="${dist.dir}/lib" />
+		<jar jarfile="${dist.dir}/lib/clone.jar" basedir="${build.dir}" />
 	</target>
 
-	<target name="clean" description="clean up" >
-		<!-- Delete the ${build} and ${dist} directory trees -->
-		<delete dir="${build}"/>
-		<delete dir="${dist}"/>
+	<target name="benchmark">
+
 	</target>
-	
-	<target name="benchmark" >
-		
-	</target>
-	
+
+	<target name="all" depends="clean,compile,dist" />
+
 </project>
