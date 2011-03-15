@@ -1,6 +1,8 @@
 package uk.ac.ucl.cs.clonedetector.benchmarking;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
+
 import uk.ac.ucl.cs.clonedetector.program.CloneDetector;
 
 public class Benchmark {
@@ -21,6 +23,8 @@ public class Benchmark {
 			System.out.println("File not found!");
 		} catch (IOException e) {
 			System.out.println("An error occurred whilst reading the file.");
+		} catch (NoSuchAlgorithmException e) {
+			System.out.println("No such algorithm available on this system!");
 		}
 		
 	}

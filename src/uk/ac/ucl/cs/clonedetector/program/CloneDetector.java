@@ -9,7 +9,7 @@ import java.math.*;
 public class CloneDetector {
 
 
-	public void findClones(String filename) throws FileNotFoundException, IOException {
+	public void findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
 		BufferedReader in = new BufferedReader(new FileReader(filename));
 		String line;
 		ArrayList<BigInteger> fingerprints = new ArrayList<BigInteger>();
@@ -52,22 +52,21 @@ public class CloneDetector {
 
 	}
 	
-	public static BigInteger computeFingerprint(String line, String algorithm) {
-		if (algorithm.equals("MD5") || algorithm.equals("SHA-1")) {
-			if (line.equals("")) return BigInteger.ZERO;
-			BigInteger fingerprint = null;
-			try {
-				MessageDigest m = MessageDigest.getInstance(algorithm);
-				m.update(line.getBytes(), 0, line.length());
-				fingerprint = new BigInteger(1,m.digest());
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			}
-			return fingerprint;
-		} else if (algorithm.equals("StringHashCode")) {
+	public static BigInteger computeFingerprint(String line, String algorithm) throws NoSuchAlgorithmException {
+		
+		if (algorithm.equals("StringHashCode")) {
 			return BigInteger.valueOf(line.hashCode());
 		}
-		return null;
+		
+		// Else hand over to MessageDigest:
+		
+		if (line.equals("")) return BigInteger.ZERO;
+		BigInteger fingerprint = null;
+		MessageDigest m = MessageDigest.getInstance(algorithm);
+		m.update(line.getBytes(), 0, line.length());
+		fingerprint = new BigInteger(1,m.digest());
+		return fingerprint;
+		
 	}
 	
 	public static String stripWhitespace(String line) {
@@ -85,11 +84,13 @@ public class CloneDetector {
 			System.out.println("Missing filename");
 		} else {
 			try {
-				cd.findClones(args[0]);
+				cd.findClones(args[0], "SHA-1");
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found!");
 			} catch (IOException e) {
 				System.out.println("An error occurred whilst reading the file.");
+			} catch (NoSuchAlgorithmException e) {
+				System.out.println("No such algorithm available on this system!");
 			}
 		}
 	}

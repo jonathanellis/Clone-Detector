@@ -3,6 +3,7 @@ package uk.ac.ucl.cs.clonedetector.program;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class CloneDetectorTest {
 	}
 	
 	@Test
-	public void test_computeFingerprint() {
+	public void test_computeFingerprint() throws NoSuchAlgorithmException {
 		assertEquals(CloneDetector.computeFingerprint("", "MD5"), BigInteger.ZERO);
 		//assertEquals(CloneDetector.computeFingerprint("%hello_2819£%^", "MD5"), new BigInteger());
 	}
