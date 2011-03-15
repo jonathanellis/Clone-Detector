@@ -16,7 +16,7 @@ public class CloneDetector {
 		
 		while ((line = in.readLine()) != null) {
 			String processedLine = stripWhitespace(line);
-			BigInteger fingerprint = computeFingerprint(processedLine, "MD5");
+			BigInteger fingerprint = computeFingerprint(processedLine, "StringHashCode");
 			fingerprints.add(fingerprint);
 		}
 		
@@ -27,10 +27,11 @@ public class CloneDetector {
 			for (int j=0; j<i; j++) { // check line i against all lines before it
 				BigInteger fi = fingerprints.get(i);
 				BigInteger fj = fingerprints.get(j);
+				// store these values in case this is the start of a clone
 				int jStart = j+1;
 				int jLength = 0;
 				int iStart = i+1;
-				while (fi.equals(fj) && !fi.equals(BigInteger.ZERO)) {
+				while (fi.equals(fj) && !fi.equals(BigInteger.ZERO)) { // while the lines are clones
 					// Start of a clone:
 					i++;
 					j++;
@@ -38,6 +39,7 @@ public class CloneDetector {
 					fj = fingerprints.get(j);
 					jLength++;
 				}
+				// clone finishes
 				if (jLength > 0) {
 					int jEnd = jStart + jLength-1;
 					int iEnd = iStart + jLength-1;
@@ -51,19 +53,21 @@ public class CloneDetector {
 	}
 	
 	public static BigInteger computeFingerprint(String line, String algorithm) {
-		if (line.equals("")) return BigInteger.ZERO;
-		
-		BigInteger fingerprint = null;
-
-		try {
-			MessageDigest m = MessageDigest.getInstance(algorithm);
-			m.update(line.getBytes(), 0, line.length());
-			fingerprint = new BigInteger(1,m.digest());
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+		if (algorithm.equals("MD5") || algorithm.equals("SHA-1")) {
+			if (line.equals("")) return BigInteger.ZERO;
+			BigInteger fingerprint = null;
+			try {
+				MessageDigest m = MessageDigest.getInstance(algorithm);
+				m.update(line.getBytes(), 0, line.length());
+				fingerprint = new BigInteger(1,m.digest());
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+			return fingerprint;
+		} else if (algorithm.equals("StringHashCode")) {
+			return BigInteger.valueOf(line.hashCode());
 		}
-
-		return fingerprint;
+		return null;
 	}
 	
 	public static String stripWhitespace(String line) {
