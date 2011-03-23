@@ -23,7 +23,7 @@ public class CloneDetector {
 		// Build comparison matrix between hashes:
 		for (int i = 0; i < fingerprints.size(); i++) {
 
-			for (int j = 0; j < i; j++) { // check line i against all lines before it
+			for (int j = i+1; j < fingerprints.size(); j++) { // check line i against all lines before it
 				BigInteger fi = fingerprints.get(i);
 				BigInteger fj = fingerprints.get(j);
 				// store these values in case this is the start of a clone
@@ -42,7 +42,7 @@ public class CloneDetector {
 				if (jLength > 0) {
 					int jEnd = jStart + jLength - 1;
 					int iEnd = iStart + jLength - 1;
-					System.out.println(jStart + ":" + jEnd + "-" + iStart + ":" + iEnd);
+					System.out.println(iStart + ":" + iEnd + "-" + jStart + ":" + jEnd);
 				}
 
 			}
