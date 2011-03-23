@@ -14,8 +14,7 @@ public class Benchmark {
 
 		try {
 			long t1 = System.currentTimeMillis();
-			BufferedReader in = new BufferedReader(new FileReader(
-					"text/war&peace.txt"));
+			BufferedReader in = new BufferedReader(new FileReader("text/war&peace.txt"));
 			String line;
 
 			while ((line = in.readLine()) != null) {
