@@ -16,8 +16,7 @@ public class CloneDetector {
 		String line;
 		while ((line = in.readLine()) != null) {
 			String processedLine = line.replaceAll("\\s*", ""); // \s matches all whitespace characters
-			//processedLine = processedLine.replaceAll("[a-zA-Z]([a-zA-Z]|[0-9])*", "%%");
-			System.out.println(processedLine);
+			// Source code normalisation will go here
 			BigInteger fingerprint = computeFingerprint(processedLine, algorithm);
 			fingerprints.add(fingerprint);
 		}
@@ -34,23 +33,22 @@ public class CloneDetector {
 			for (int j = i+1; j < fingerprints.size(); j++) { // check line i against all following it
 				BigInteger fi = fingerprints.get(i);
 				BigInteger fj = fingerprints.get(j);
-				// store these values in case this is the start of a clone
+				// Store these values just in case this is the start of a clone
 				int iStart = i + 1;
 				int jStart = j + 1;
 				int cloneLength = 0;
+
 				while (fi.equals(fj) && !fi.equals(BigInteger.ZERO) && j < fingerprints.size()-1) { // while the lines are clones
-					System.out.println("clone found " + i + "-" + j);
-					// Start of a clone:
+					// Increase i and j in step:
 					i++;
 					j++;
 					fi = fingerprints.get(i);
 					fj = fingerprints.get(j);
 					cloneLength++;
 				}
-				// clone finishes, so report it
+				// Clone finishes, so save it:
 				if (cloneLength > 0) {
 					Clone c = new Clone(iStart, jStart, cloneLength-1);
-					System.out.println("CLONE END: " + c);
 					clones.add(c);
 				}
 			}
@@ -73,13 +71,13 @@ public class CloneDetector {
 		return fingerprint;
 	}
 	
+	
+	// Handles all the output:
 	public void findClonesFromFiles(String[] filenames, String algorithm) throws FileNotFoundException, NoSuchAlgorithmException, IOException {
 		for (int i=0; i<filenames.length; i++) {
 			if (filenames.length > 1) System.out.println(filenames[i]);
 			ArrayList<Clone> clones = findClones(filenames[i], algorithm);
-			for (Clone clone : clones) {
-				System.out.println(clone);
-			}
+			for (Clone clone : clones) System.out.println(clone);
 			if (filenames.length > 1 && i<filenames.length-1) System.out.println("");
 		}
 	}
