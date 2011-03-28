@@ -8,7 +8,7 @@ import java.math.*;
 
 public class CloneDetector {
 
-	public void findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
+	public ArrayList<Clone> findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
 
 		List<BigInteger> fingerprints = new ArrayList<BigInteger>();
 		BufferedReader in = new BufferedReader(new FileReader(filename));
@@ -16,13 +16,21 @@ public class CloneDetector {
 		String line;
 		while ((line = in.readLine()) != null) {
 			String processedLine = line.replaceAll("\\s*", ""); // \s matches all whitespace characters
+			//processedLine = processedLine.replaceAll("[a-zA-Z]([a-zA-Z]|[0-9])*", "%%");
+			System.out.println(processedLine);
 			BigInteger fingerprint = computeFingerprint(processedLine, algorithm);
 			fingerprints.add(fingerprint);
 		}
-
+		return findClonesFromFingerprints(fingerprints);
+	}
+		
+	
+	// BUG: Cannot find a clone if it's on the last line of the file.
+	public ArrayList<Clone> findClonesFromFingerprints(List<BigInteger> fingerprints) {
+		ArrayList<Clone> clones = new ArrayList<Clone>();
 		// Build comparison matrix between hashes:
 		for (int i = 0; i < fingerprints.size(); i++) { // i is the main pointer
-
+		
 			for (int j = i+1; j < fingerprints.size(); j++) { // check line i against all following it
 				BigInteger fi = fingerprints.get(i);
 				BigInteger fj = fingerprints.get(j);
@@ -30,7 +38,8 @@ public class CloneDetector {
 				int iStart = i + 1;
 				int jStart = j + 1;
 				int cloneLength = 0;
-				while (fi.equals(fj) && !fi.equals(BigInteger.ZERO) && j < fingerprints.size()) { // while the lines are clones
+				while (fi.equals(fj) && !fi.equals(BigInteger.ZERO) && j < fingerprints.size()-1) { // while the lines are clones
+					System.out.println("clone found " + i + "-" + j);
 					// Start of a clone:
 					i++;
 					j++;
@@ -40,15 +49,13 @@ public class CloneDetector {
 				}
 				// clone finishes, so report it
 				if (cloneLength > 0) {
-					int jEnd = jStart + cloneLength - 1;
-					int iEnd = iStart + cloneLength - 1;
-					System.out.println(iStart + ":" + iEnd + "-" + jStart + ":" + jEnd);
+					Clone c = new Clone(iStart, jStart, cloneLength-1);
+					System.out.println("CLONE END: " + c);
+					clones.add(c);
 				}
-
 			}
-
 		}
-
+		return clones;
 	}
 
 	public static BigInteger computeFingerprint(String line, String algorithm) throws NoSuchAlgorithmException {
@@ -69,7 +76,11 @@ public class CloneDetector {
 	public void findClonesFromFiles(String[] filenames, String algorithm) throws FileNotFoundException, NoSuchAlgorithmException, IOException {
 		for (int i=0; i<filenames.length; i++) {
 			if (filenames.length > 1) System.out.println(filenames[i]);
-			findClones(filenames[i], algorithm);
+			ArrayList<Clone> clones = findClones(filenames[i], algorithm);
+			for (Clone clone : clones) {
+				System.out.println(clone);
+			}
+			if (filenames.length > 1 && i<filenames.length-1) System.out.println("");
 		}
 	}
 
