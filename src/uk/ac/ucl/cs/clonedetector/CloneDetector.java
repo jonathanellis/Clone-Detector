@@ -8,7 +8,15 @@ import java.math.*;
 
 public class CloneDetector {
 
-	
+	/**
+	 * Find clones in the given filename using the specified algorithm.
+	 * @param filename
+	 * @param algorithm
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException Thrown if the algorithm is not available on the system.
+	 */
 	public ArrayList<Clone> findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
 		List<BigInteger> fingerprints = new ArrayList<BigInteger>();
 		BufferedReader in = new BufferedReader(new FileReader(filename));
@@ -17,7 +25,7 @@ public class CloneDetector {
 		
 		String line;
 		while ((line = in.readLine()) != null) {
-			line = n.normalise(line);
+			line = n.normalize(line);
 			//System.out.println(line);
 			BigInteger fingerprint = computeFingerprint(line, algorithm);
 			fingerprints.add(fingerprint);
@@ -25,6 +33,12 @@ public class CloneDetector {
 		return findClonesFromFingerprints(fingerprints);
 	}
 	
+	/**
+	 * Retrieves the file extension from a given relative or absolute filename. Filenames
+	 * with no extension return "".
+	 * @param filename Filename to get the extension for
+	 * @return Extension for the filename
+	 */
 	public static String getExtension(String filename) {
 		String chunks[] = filename.split("\\.");
 		if (chunks.length > 0) return chunks[chunks.length-1];

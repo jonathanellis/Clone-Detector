@@ -24,13 +24,20 @@ public class Normalizer {
 		}
 	}
 	
-	public String normalise(String line) {
-		if (!lang.equals("")) {
+	/**
+	 * Normalizes a given string. If a language has been specified and exists then the
+	 * string will be normalized under that language's keywords (i.e. will ignore any
+	 * keywords when normalizing identifiers).
+	 * @param line
+	 * @return
+	 */
+	public String normalize(String string) {
+		if (!keywords.equals("")) {
 			String regexp = "((?!(" + keywords + ")\\b)\\b[A-Za-z][A-Za-z0-9]*)";
-			line = line.replaceAll(regexp, "%VAR%");	// normalise variables
+			string = string.replaceAll(regexp, "%VAR%");	// normalise variables
 		}
-		line = line.replaceAll("\\s*", ""); 		// strip whitespace
-		return line;
+		string = string.replaceAll("\\s*", ""); 		// strip whitespace
+		return string;
 	}
 	
 }
