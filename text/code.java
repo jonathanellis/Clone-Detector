@@ -9,7 +9,7 @@ public class Code {
 	}
 	
 	public int doSomethingElse() {
-		int alpha = 0.6;
+		int alphas = 0.6;
 		int beta = 0.7;
 		int gamma = alpha + beta;
 		int delta = 1 / gamma;

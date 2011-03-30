@@ -8,19 +8,27 @@ import java.math.*;
 
 public class CloneDetector {
 
+	
 	public ArrayList<Clone> findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
 
 		List<BigInteger> fingerprints = new ArrayList<BigInteger>();
 		BufferedReader in = new BufferedReader(new FileReader(filename));
-
+		
 		String line;
+		Normalizer n = new Normalizer(getExtension(filename));
 		while ((line = in.readLine()) != null) {
-			String processedLine = line.replaceAll("\\s*", ""); // \s matches all whitespace characters
-			// Source code normalisation will go here
-			BigInteger fingerprint = computeFingerprint(processedLine, algorithm);
+			line = n.normalise(line);
+			//System.out.println(line);
+			BigInteger fingerprint = computeFingerprint(line, algorithm);
 			fingerprints.add(fingerprint);
 		}
 		return findClonesFromFingerprints(fingerprints);
+	}
+	
+	public static String getExtension(String filename) {
+		String chunks[] = filename.split("\\.");
+		if (chunks.length > 0) return chunks[chunks.length-1];
+		return "";
 	}
 		
 	
