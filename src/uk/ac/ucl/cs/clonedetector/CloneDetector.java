@@ -10,12 +10,12 @@ public class CloneDetector {
 
 	
 	public ArrayList<Clone> findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
-
 		List<BigInteger> fingerprints = new ArrayList<BigInteger>();
 		BufferedReader in = new BufferedReader(new FileReader(filename));
 		
-		String line;
 		Normalizer n = new Normalizer(getExtension(filename));
+		
+		String line;
 		while ((line = in.readLine()) != null) {
 			line = n.normalise(line);
 			//System.out.println(line);

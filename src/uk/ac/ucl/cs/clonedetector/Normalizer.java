@@ -26,7 +26,7 @@ public class Normalizer {
 	
 	public String normalise(String line) {
 		if (!lang.equals("")) {
-			String regexp = "((?!(" + keywords + ")\\b)\\b\\w+)";
+			String regexp = "((?!(" + keywords + ")\\b)\\b[A-Za-z][A-Za-z0-9]*)";
 			line = line.replaceAll(regexp, "%VAR%");	// normalise variables
 		}
 		line = line.replaceAll("\\s*", ""); 		// strip whitespace
