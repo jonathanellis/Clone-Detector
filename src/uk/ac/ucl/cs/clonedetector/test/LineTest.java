@@ -46,11 +46,23 @@ public class LineTest {
 	
 	@Test
 	public void test_compareTo()  {
-		
-		assertEquals(l.compareTo(l2),(BigInteger.ZERO.subtract(BigInteger.ONE)).intValue());
-		
+		assertEquals(l.compareTo(l2),(BigInteger.ZERO.subtract(BigInteger.ONE)).intValue());	
 	}
 	
+	@Test
+	public void test_getLineNumber()  {
+		assertEquals(l.getLineNumber(), 14);	
+	}
+	
+	@Test
+	public void test_getLineContent()  {
+		assertEquals(l.getLineContent(), "line");	
+	}
+	
+	@Test
+	public void test_getFingerprint()  {
+		assertEquals(l.getFingerprint(), BigInteger.ZERO);	
+	}
 
 	
 }
