@@ -10,15 +10,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class CloneDetector {
-  
-  /*
-   * Variables for the findClones() method (and its related methods).
-   * The variables are re-used each iteration for efficiency reasons.
-   * ("collider" is what the collision is colliding with)
-   */
+
+	/*
+	 * Variables for the findClones() method (and its related methods). The
+	 * variables are re-used each iteration for efficiency reasons. ("collider"
+	 * is what the collision is colliding with)
+	 */
 
 	private Index index = new Index();
-  
+
 	/**
 	 * Find clones in the given filename using the specified algorithm.
 	 * 
@@ -36,18 +36,18 @@ public class CloneDetector {
 		Normalizer normalizer = new Normalizer(getExtension(filename));
 		String line;
 		int lineNum = 1;
-		
+
 		int iStart = -1;
 		int jStart = -1;
 		int matchLength = -1;
 		int prevMatchingLine = -1;
-		
+
 		while ((line = in.readLine()) != null) {
 			String normalizedLine = normalizer.normalize(line);
 			BigInteger fingerprint = computeFingerprint(normalizedLine, algorithm);
-			
+
 			ArrayList<Integer> matchingLines = index.linesWithFingerprint(fingerprint);
-			
+
 			// Start of a new match:
 			if (matchingLines.size() > 0 && matchLength == -1) {
 				int earliestMatch = matchingLines.get(0);
@@ -56,23 +56,25 @@ public class CloneDetector {
 				jStart = earliestMatch;
 				matchLength = 1;
 			} else if (matchLength > -1) {
-				if (matchingLines.contains(prevMatchingLine+1)) { // continue match
+				if (matchingLines.contains(prevMatchingLine + 1)) { // continue
+																	// match
 					matchLength++;
 					prevMatchingLine++;
 				} else { // end match
-					Clone c = new Clone(iStart, jStart, matchLength-1);
+					Clone c = new Clone(iStart, jStart, matchLength - 1);
 					clones.add(c);
 					iStart = -1;
 					jStart = -1;
 					matchLength = -1;
 				}
 			}
-			
+
 			index.updateIndex(fingerprint, lineNum);
 			lineNum++;
 		}
 		return clones;
 	}
+
 	/**
 	 * Retrieves the file extension from a given relative or absolute filename.
 	 * Filenames with no extension return "".
@@ -94,7 +96,7 @@ public class CloneDetector {
 			return BigInteger.valueOf(line.hashCode());
 
 		/*
-		 *  Else hand over to MessageDigest:
+		 * Else hand over to MessageDigest:
 		 */
 
 		if (line.equals(""))
@@ -107,38 +109,47 @@ public class CloneDetector {
 		return fingerprint;
 	}
 
+	public void info(String[] fileNames){
+		System.out.print("Searching for clones in ");
+		for (int i = 1; i < fileNames.length; i++) {
+			System.out.print(fileNames[i] + " ");
+		}
+
+		System.out.println();
+	}
+	
 	/*
 	 * Handles all the output:
 	 */
-	public void findClonesFromFiles(String[] filenames, String algorithm) throws FileNotFoundException, NoSuchAlgorithmException, IOException {
-		for (int i = 0; i < filenames.length; i++) {
-			if (filenames.length > 1)
-				System.out.println(filenames[i]);
-			
-			ArrayList<Clone> clones = findClones(filenames[i], algorithm);
-			
-			for (Clone clone : clones)
-				System.out.println(clone);
-			
-			if (filenames.length > 1 && i < filenames.length - 1)
-				System.out.println("");
+	public void findClones(String algorithm, String[] fileNames) {
+		info(fileNames);
+		
+		for (int i = 1; i < fileNames.length; i++) {
+			ArrayList<Clone> clones;
+			try {
+				clones = findClones(fileNames[i], algorithm);
+				for (Clone clone : clones)
+					System.out.println(clone);
+
+				if (fileNames.length > 1 && i < fileNames.length - 1)
+					System.out.println("");
+			} catch (FileNotFoundException e) {
+				System.err.println("File not found!");
+			} catch (NoSuchAlgorithmException e) {
+				System.err.println("No such algorithm available on this system!");
+			} catch (IOException e) {
+				System.err.println("An error occurred whilst reading the file.");
+			}
 		}
 	}
 
 	public static void main(String[] args) {
 		CloneDetector cd = new CloneDetector();
-		if (args.length < 1) {
-			System.out.println("Missing filename");
+
+		if (args.length < 2) {
+			System.out.println("USAGE: java -jar clone.java <algorithm> <filename(s)>");
 		} else {
-			try {
-				cd.findClonesFromFiles(args, "SHA-1");
-			} catch (FileNotFoundException e) {
-				System.out.println("File not found!");
-			} catch (IOException e) {
-				System.out.println("An error occurred whilst reading the file.");
-			} catch (NoSuchAlgorithmException e) {
-				System.out.println("No such algorithm available on this system!");
-			}
+			cd.findClones(args[0], args);
 		}
 	}
 }
