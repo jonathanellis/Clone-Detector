@@ -1,11 +1,11 @@
 public class Code {
 
-	public int doSomething() {
-		int alpha = 0.6;
+	public int doSomethingElse() {
+		int alphas = 0.6;
 		int beta = 0.7;
 		int gamma = alpha + beta;
 		int delta = 1 / gamma;
-		return delta;
+		return delta;	
 	}
 	
 	public int doSomethingElse() {
