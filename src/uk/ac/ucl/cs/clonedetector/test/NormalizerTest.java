@@ -1,14 +1,10 @@
 package uk.ac.ucl.cs.clonedetector.test;
 import static org.junit.Assert.*;
 
-import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ucl.cs.clonedetector.CloneDetector;
 import uk.ac.ucl.cs.clonedetector.Normalizer;
 
 public class NormalizerTest {
@@ -24,7 +20,6 @@ String lang;
 		
 	}
 
-	
 	@Test
 	public void test_normalize()  {
 		//Fixture objects with and without language specified

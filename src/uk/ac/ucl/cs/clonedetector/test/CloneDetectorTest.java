@@ -13,7 +13,6 @@ import uk.ac.ucl.cs.clonedetector.CloneDetector;
 
 public class CloneDetectorTest {
 
-
 	@Before
 	public void setUp() throws Exception {
 
