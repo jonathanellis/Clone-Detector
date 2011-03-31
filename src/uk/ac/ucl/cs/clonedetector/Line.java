@@ -9,33 +9,63 @@ import java.math.BigInteger;
  * A class which stores information about a line of text.
  */
 public class Line implements Comparable<Line> {
-	
+
 	/**
-	 * 
+	 * The position of line in question in a file.
 	 */
-	public final String lineContents;
-	
+	private final int lineNumber;
+
 	/**
-	 * 
+	 * The text found at position lineNumber
 	 */
-	public final BigInteger fingerprint;
-	
+	private final String lineContent;
+
 	/**
-	 * 
+	 * The fingerprint of the line in question
 	 */
-	public final int lineNumber;
+	private final BigInteger fingerprint;
 
 	/**
 	 * Constructs a <code>Line</code> using the passed parameters.
 	 * 
-	 * @param lineContents
 	 * @param lineNumber
+	 *            position of line in question in a file
+	 * @param lineContent
+	 *            text found at position lineNumber
 	 * @param fingerprint
+	 *            fingerprint of the line
 	 */
-	public Line(String lineContents, int lineNumber, BigInteger fingerprint) {
-		this.lineContents = lineContents;
+	public Line(int lineNumber, String lineContent, BigInteger fingerprint) {
 		this.lineNumber = lineNumber;
+		this.lineContent = lineContent;
 		this.fingerprint = fingerprint;
+	}
+
+	/**
+	 * Gets the line number of the Line in question
+	 * 
+	 * @return lineNumber
+	 */
+	public int getLineNumber() {
+		return lineNumber;
+	}
+
+	/**
+	 * Gets the content of the line
+	 * 
+	 * @return lineContent
+	 */
+	public String getLineContent() {
+		return lineContent;
+	}
+
+	/**
+	 * Gets the fingerprint of the line
+	 * 
+	 * @return fingerprint
+	 */
+	public BigInteger getFingerprint() {
+		return fingerprint;
 	}
 
 	@Override
