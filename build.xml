@@ -1,7 +1,5 @@
-<project name="Clone-Detector" default="dist" basedir=".">
-	<description>
-		Line-based clone detector to detect clones within a single file.
-	</description>
+<project name="Clone-Detector" default="all" basedir=".">
+	<description>Line-based clone detector to detect clones within a single file.</description>
 
 	<!-- set global properties for this build -->
 	<property name="src.dir" location="src" />
@@ -9,7 +7,7 @@
 	<property name="build.dir" location="build" />
 	<property name="javadoc.dir" value="javadoc" />
 	<property name="dist.dir" location="dist" />
-	<property name="debug" value="on" />
+	<property name="debug" value="off" />
 
 
 	<path id="classpath">
@@ -20,35 +18,48 @@
 	</path>
 
 	<target name="clean">
-		<!-- Delete the ${build} and ${dist} directory trees -->
 		<delete dir="${build.dir}" quiet="true" />
 		<delete dir="${dist.dir}" quiet="true" />
+		<delete dir="${javadoc.dir}" quiet="true" />
 	</target>
 
 	<target name="init">
-		<!-- Create the time stamp -->
-		<tstamp />
 		<!-- Create the build directory structure used by compile -->
 		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}/lib" />
+		<mkdir dir="${javadoc.dir}" />
 	</target>
 
 	<target name="compile" depends="init" description="compile the source ">
-		<javac debug="${debug}" source="1.5" classpathref="classpath" destdir="${build.dir}">
+		<javac 
+			debug="${debug}" 
+			source="1.5" 
+			classpathref="classpath" 
+			destdir="${build.dir}"
+			optimize="true">
+			
 			<src path="${src.dir}" />
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 	</target>
 
 	<target name="dist" depends="compile" description="generate the distribution">
-		<delete file="${dist.dir}/lib/clone.jar" />
-		<mkdir dir="${dist.dir}/lib" />
-		<jar jarfile="${dist.dir}/lib/clone.jar" basedir="${build.dir}" />
+		<jar 
+			basedir="${build.dir}"
+			jarfile="${dist.dir}/lib/clone.jar" />
+		
+        <javadoc 
+        	description="Generate Javadocs for the application" 
+        	packagenames="uk.ac.ucl.cs.clonedetector, uk.ac.ucl.cs.clonedetector.benchmarking"
+            sourcepath="${src.dir}"
+            destdir="${javadoc.dir}"
+            access="private"
+            verbose="true"
+        	windowtitle="Clone Detector API">
+        </javadoc>
+		
 	</target>
 
-	<target name="benchmark">
-
-	</target>
-
-	<target name="all" depends="clean,compile,dist" />
+	<target name="all" depends="clean, compile, dist" />
 
 </project>
