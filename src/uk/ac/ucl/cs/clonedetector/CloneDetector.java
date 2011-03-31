@@ -192,14 +192,14 @@ public class CloneDetector {
 	 *            Filename to get the extension for
 	 * @return Extension for the filename
 	 */
-	public static String getExtension(String filename) {
+	public String getExtension(String filename) {
 		String chunks[] = filename.split("\\.");
 		if (chunks.length > 0)
 			return chunks[chunks.length - 1];
 		return "";
 	}
 
-	public static BigInteger computeFingerprint(String line, String algorithm) throws NoSuchAlgorithmException {
+	public BigInteger computeFingerprint(String line, String algorithm) throws NoSuchAlgorithmException {
 
 		if (algorithm.equals("StringHashCode"))
 			return BigInteger.valueOf(line.hashCode());
