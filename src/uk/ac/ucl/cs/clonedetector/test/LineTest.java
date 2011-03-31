@@ -21,21 +21,15 @@ public class LineTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		 l = new Line("line", 14, BigInteger.ZERO);
-		 l2 = new Line("line2", 12324, BigInteger.ONE);
+		 l = new Line(14,"line", BigInteger.ZERO);
+		 l2 = new Line(12324, "line2", BigInteger.ONE);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void test_variables()  {
-		assertEquals(l.fingerprint, BigInteger.ZERO);
-		assertEquals(l.lineNumber, 14);
-		assertEquals(l.lineContents, "line");
-	}
-	
+
 	
 	
 	@Test
@@ -45,7 +39,7 @@ public class LineTest {
 	
 	@Test
 	public void test_equals()  {
-		assertEquals(l.equals(new Line("line", 14, BigInteger.ZERO)), true);
+		assertEquals(l.equals(new Line(14, "line", BigInteger.ZERO)), true);
 		assertEquals(l.equals(l2), false);
 		
 	}
