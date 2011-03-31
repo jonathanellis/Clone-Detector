@@ -1,9 +1,12 @@
 package uk.ac.ucl.cs.clonedetector;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,11 +15,47 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class CloneDetector {
+  
+  /*
+   * Variables for the findClones() method (and its related methods).
+   * The variables are re-used each iteration for efficiency reasons.
+   * ("collider" is what the collision is colliding with)
+   */
+  private String line;
+  private Line currentLine;
+  private BigInteger fingerprint;
+  private int offset;
+  private int colliderStart;
+  private int currentCollisionStart;
+  private int currentCollisionEnd;
+  
+  private int lineNumber;
+  private LinkedList<Line> currentList;
+  private boolean inCollisionBlock = false;
+  private ArrayList<Clone> clones;
+  
+  
 	/*
-	 * The number of input lines which the algorithm expects: (this is a soft
-	 * limit: the algorithm needs to know it only for performance reasons)
+	 * from:
+	 * http://stackoverflow.com/questions/453018/number-of-lines-in-a-file-in-java/453067#453067
 	 */
-	public static final int NUMBER_OF_LINES = 1024;
+	private int count(String filename) throws IOException {
+    InputStream is = new BufferedInputStream(new FileInputStream(filename));
+    try {
+        byte[] c = new byte[1024];
+        int count = 0;
+        int readChars = 0;
+        while ((readChars = is.read(c)) != -1) {
+            for (int i = 0; i < readChars; ++i) {
+                if (c[i] == '\n')
+                    ++count;
+            }
+        }
+        return count;
+    } finally {
+        is.close();
+    }
+}
 
 	/**
 	 * Find clones in the given filename using the specified algorithm.
@@ -30,54 +69,32 @@ public class CloneDetector {
 	 *             Thrown if the algorithm is not available on the system.
 	 */
 	public ArrayList<Clone> findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
-
-		ArrayList<Clone> clones = new ArrayList<Clone>();
+	  
+	  /*
+	   * The number of input lines which the algorithm expects: (this is a soft
+	   * limit: the algorithm needs to know it only for the performance of its data structures)
+	   */
+	  int numberOfLines = count(filename);
+	  
+	  BufferedReader in = new BufferedReader(new FileReader(filename));
+	  
+		clones = new ArrayList<Clone>();
 
 		/*
 		 * The HashTable class is not used because we want to see the collisions
 		 * happening:
 		 */
-
-		HashMap<BigInteger, LinkedList<Line>> hashCodeTable = new HashMap<BigInteger, LinkedList<Line>>(NUMBER_OF_LINES);
+		HashMap<BigInteger, LinkedList<Line>> hashCodeTable = new HashMap<BigInteger, LinkedList<Line>>(numberOfLines);
 
 		/*
 		 * there couldn't possibly be collisions between line numbers (as each
 		 * line has a unique line number), so no linked lists are needed:
 		 */
-
-		BufferedReader in = new BufferedReader(new FileReader(filename));
-		HashMap<Integer, Line> lineNumberTable = new HashMap<Integer, Line>(NUMBER_OF_LINES);
-
-		/*
-		 * re-using variables for performance reasons (the garbage collector
-		 * won't have to do so much work this way):
-		 */
-
-		String line;
-		Line currentLine;
-		BigInteger fingerprint = null;
-
-		/*
-		 * "previousFingerprint" is the fingerprint of the line immediately
-		 * prior to the current line
-		 */
-		BigInteger previousFingerprint = null;
-
-		/*
-		 * "collider" is what the collision is colliding with
-		 */
-		int offset = 0;
-		int colliderStart = 0;
-		int currentCollisionStart = 0;
-		int currentCollisionEnd = 0;
-
-		int lineNumber = 0;
-		LinkedList<Line> currentList;
-		boolean inCollisionBlock = false;
-
-		//TODO: Check if this is in the correct place
+		HashMap<Integer, Line> lineNumberTable = new HashMap<Integer, Line>(numberOfLines);
+		
 		Normalizer normalizer = new Normalizer(getExtension(filename));
 		
+		lineNumber = 0;
 		while ((line = in.readLine()) != null) {
 			lineNumber++;
 
@@ -86,7 +103,6 @@ public class CloneDetector {
 			 */
 			String processedLine = line.replaceAll("\\s*", "");
 			processedLine = normalizer.normalize(processedLine);
-			//System.out.println(processedLine); // uncomment for debug
 			fingerprint = computeFingerprint(processedLine, algorithm);
 			currentLine = new Line(lineNumber, processedLine, fingerprint);
 
@@ -97,14 +113,8 @@ public class CloneDetector {
 
 			if (processedLine.equals("")) {
 				if (inCollisionBlock) {
-					inCollisionBlock = false;
-					currentCollisionEnd = lineNumber - 1;
-					if (colliderStart == (currentCollisionStart - 1)) {
-						currentCollisionStart--;
-					}
-					clones.add(new Clone(colliderStart, currentCollisionStart, currentCollisionEnd - currentCollisionStart));
+				  exitFromCollisionBlock(false);
 				}
-				previousFingerprint = BigInteger.ZERO;
 				continue;
 			}
 
@@ -120,22 +130,9 @@ public class CloneDetector {
 
 				if (inCollisionBlock) {
 					offset = lineNumber - currentCollisionStart;
-
-					if (lineNumberTable.get(colliderStart + offset) == null) {
-						System.out.println("lineNumber is: " + lineNumber);
-						System.out.println("collderStart is: " + colliderStart);
-						System.out.println("offset is: " + offset);
-						System.out.println("NULL");
-						System.exit(0);
-					}
-
+					
 					if ((!lineNumberTable.get(colliderStart + offset).getFingerprint().equals(fingerprint))) {
-						inCollisionBlock = false;
-						currentCollisionEnd = lineNumber - 1;
-						if (colliderStart == (currentCollisionStart - 1)) {
-							currentCollisionStart--;
-						}
-						clones.add(new Clone(colliderStart, currentCollisionStart, currentCollisionEnd - currentCollisionStart));
+					  exitFromCollisionBlock(false);
 					}
 				}
 
@@ -164,30 +161,31 @@ public class CloneDetector {
 				 * exiting the current collision block:
 				 */
 				if (inCollisionBlock) {
-					inCollisionBlock = false;
-					currentCollisionEnd = lineNumber - 1;
-					if (colliderStart == (currentCollisionStart - 1)) {
-						currentCollisionStart--;
-					}
-					clones.add(new Clone(colliderStart, currentCollisionStart, currentCollisionEnd - currentCollisionStart));
+				  exitFromCollisionBlock(false);
 				}
 			}
-
-			previousFingerprint = fingerprint;
 		}
 		if (inCollisionBlock) {
-			inCollisionBlock = false;
-			currentCollisionEnd = lineNumber;
-			if (colliderStart == (currentCollisionStart - 1)) {
-				currentCollisionStart--;
-			}
-			clones.add(new Clone(colliderStart, currentCollisionStart, currentCollisionEnd - currentCollisionStart));
+		  exitFromCollisionBlock(true);
 		}
 
 		in.close();
 		return clones;
 	}
 
+	private void exitFromCollisionBlock(boolean endOfLoop)
+	{
+	  inCollisionBlock = false;
+    
+	  if ( endOfLoop ) { currentCollisionEnd = lineNumber; }
+	  else { currentCollisionEnd = lineNumber - 1; }
+	  
+    if (colliderStart == (currentCollisionStart - 1)) {
+      currentCollisionStart--;
+    }
+    clones.add(new Clone(colliderStart, currentCollisionStart, currentCollisionEnd - currentCollisionStart));
+	}
+	
 	/**
 	 * Retrieves the file extension from a given relative or absolute filename.
 	 * Filenames with no extension return "".
