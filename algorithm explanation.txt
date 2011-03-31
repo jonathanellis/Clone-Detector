@@ -1,0 +1,57 @@
+Explanation of the algorithm used to detect cloned lines or blocks
+==================================================================
+
+The algorithm makes only a single pass through the file (i.e. each line is
+read sequentially only once). This makes the algorithm of O(n) time complexity
+(which is the minimum possible for this problem, as every line must be read
+at least once for them all to be compared).
+
+At each line, the algorithm takes the hash of the line's contents, the line
+number, and the actual contents of the line, and stores them in an object
+(specifically, a Line object). This Line object is then stored in two separate HashMap
+mappings (HashMaps are used because most of their operations are constant-time).
+One of these mappings has the numerical value of the hash as its keys and a 
+LinkedList of Line objects whose contents has to that value as its values);
+the other mapping has the line number as its keys
+(and the corresponding Line object as its value). Two separate mappings are used because,
+although it is very space-inefficient, it makes certain operations faster (due
+to the constant-time characteristics of most of the operations of the HashMap
+class).
+
+If, when putting a value into the hash mapping (i.e. the mapping with the
+numerical hash values as its keys), there is a collision, then this
+means that the current line matches a line which has been previously encountered
+(it is obviously impossible for there to be a collision when inserting a Line
+object into the line number mapping (i.e. the mapping with the line numbers
+as its keys), as line numbers increase sequentially and thus each line has a
+unique line number). The first Line object in the LinkedList
+which corresponds to the hash which has just collided is called the "collider".
+The collider's line number is found (i.e. the line number of the first line which has
+the same hash as the current line) in the collider Line object. Then the line 
+number of the collider and the current line are both recorded into a new Clone
+object; however this new Clone object still needs to know the length of the collision
+block, so it is not yet finalised and added to the ArrayList of Clone objects.
+The algorithm then moves to the next line of the input file.
+
+Ordinarily, the algorithm runs in non-collision mode; however when a collision
+happens (as detailed above), then the algorithm enters collision mode (the
+collision mode is actually just a boolean flag in the program). The algorithm needs
+to have two different modes because when a collision happens, the algorithm
+needs to work out for how many consecutive lines does the collision between the
+current block and the collider block run for (there could be one or more lines of
+consecutive collisions between the current block and the collider).
+
+At the next line (which the algorithm has moved to, whether or not there
+was a collision), if the algorithm is in collision mode (i.e. the previous line
+collided) and the current line collides as well, then it is checked to see whether 
+the line which the current line collided with is the line immediately succeeding
+the collider (the collider's line number was recorded previously, as detailed above);
+if it is, then this is a collision block (i.e. a block of identical text), and
+so the algorithm remains in collision mode, and the length of the collision block
+(which is required by the new Clone object) is incremented by one; if it is not,
+then the collision block has finished, and the Clone object is finalised with a length
+equal to the number of sequential lines that did collide.
+
+The final list of finalised Clone objects (after the file has been fully read)
+ then contains (or should contain) all of the collision blocks in the file.
+ 
