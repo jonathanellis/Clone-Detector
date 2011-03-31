@@ -2,6 +2,7 @@ package uk.ac.ucl.cs.clonedetector.test;
 
 import static org.junit.Assert.*;
 
+
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 

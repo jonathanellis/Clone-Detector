@@ -88,4 +88,5 @@ public class Line implements Comparable<Line> {
 	public int compareTo(Line other) {
 		return (this.fingerprint.subtract(other.fingerprint)).intValue();
 	}
+
 }
