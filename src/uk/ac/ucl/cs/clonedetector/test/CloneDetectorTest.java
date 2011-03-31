@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import uk.ac.ucl.cs.clonedetector.CloneDetector;
 
-
 public class CloneDetectorTest {
 
 
@@ -28,9 +27,19 @@ public class CloneDetectorTest {
 	@Test
 	public void test_computeFingerprint() throws NoSuchAlgorithmException {
 		assertEquals(CloneDetector.computeFingerprint("", "MD5"), BigInteger.ZERO);
-		//assertEquals(CloneDetector.computeFingerprint("%hello_2819£%^", "MD5"), new BigInteger());
-		//testcomment from tom
 	}
-
-
+	
+	@Test
+	public void test_getExtension() {
+		//Tests for cases which should return ""
+		//assertEquals(CloneDetector.getExtension("path/to/file/noextension"), "");
+		//assertEquals(CloneDetector.getExtension(""), "");
+		
+		//Tests for cases which should return correct extension
+		assertEquals(CloneDetector.getExtension("path/to/code.java"), "java");
+		assertEquals(CloneDetector.getExtension("path/to.a.file.with.lots.of.dots/to/code.java"), "java");
+		assertEquals(CloneDetector.getExtension("path/to/code.cpp"), "cpp");
+		assertEquals(CloneDetector.getExtension("path/to.a.file.with.lots.of.dots/to/code.cpp"), "cpp");
+	}
+	
 }
