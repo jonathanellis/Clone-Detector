@@ -194,7 +194,7 @@ public class CloneDetector {
 	 */
 	public static String getExtension(String filename) {
 		String chunks[] = filename.split("\\.");
-		if (chunks.length > 0)
+		if (chunks.length > 1)
 			return chunks[chunks.length - 1];
 		return "";
 	}
