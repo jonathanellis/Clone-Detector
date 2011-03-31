@@ -1,12 +1,24 @@
 package uk.ac.ucl.cs.clonedetector;
 
-import java.io.*;
-import java.security.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.List;
-import java.math.*;
+import java.util.HashMap;
+import java.util.LinkedList;
 
-public class CloneDetector {
+public class CloneDetector
+{
+  /*
+   * The number of input lines which the algorithm expects:
+   * (this is a soft limit: the algorithm needs to know it only for performance reasons)
+   */
+  public static final int NUMBER_OF_LINES = 1024;
+  
 
 	/**
 	 * Find clones in the given filename using the specified algorithm.
@@ -17,8 +29,9 @@ public class CloneDetector {
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException Thrown if the algorithm is not available on the system.
 	 */
-	public ArrayList<Clone> findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
-		List<BigInteger> fingerprints = new ArrayList<BigInteger>();
+	public ArrayList<Clone> findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException
+	{
+		/*List<BigInteger> fingerprints = new ArrayList<BigInteger>();
 		BufferedReader in = new BufferedReader(new FileReader(filename));
 		
 		Normalizer n = new Normalizer(getExtension(filename));
@@ -30,7 +43,92 @@ public class CloneDetector {
 			BigInteger fingerprint = computeFingerprint(line, algorithm);
 			fingerprints.add(fingerprint);
 		}
-		return findClonesFromFingerprints(fingerprints);
+		return findClonesFromFingerprints(fingerprints);*/
+	  
+	   
+    ArrayList<Clone> clones = new ArrayList<Clone>();
+    
+    // The HashTable class is not used because we want to see the collisions happening:
+    HashMap< BigInteger, LinkedList<Line> > hashCodeTable = new HashMap< BigInteger, LinkedList<Line> >(NUMBER_OF_LINES);
+    // there couldn't possibly be collisions between line numbers (as each line has a unique line number), so no linked lists are needed:
+    HashMap<Integer, Line> lineNumberTable = new HashMap<Integer, Line>(NUMBER_OF_LINES);
+    
+    BufferedReader in = new BufferedReader(new FileReader(filename));
+    
+    // re-using variables for performance reasons (the garbage collector won't have to do so much work this way):
+    String line;
+    BigInteger fingerprint = null, previousFingerprint = null; // "previousFingerprint" is the fingerprint of the line immediately prior to the current line
+    Line currentLine;
+    int currentCollisionStart = 0, currentCollisionEnd = 0, colliderStart = 0, offset = 0; // "collider" is what the collision is colliding with 
+    LinkedList<Line> currentList;
+    boolean inCollisionBlock = false;
+    int lineNumber = 0;
+    while ( (line = in.readLine() ) != null)
+    {
+      lineNumber++;
+      String processedLine = line.replaceAll("\\s*", ""); // \s matches all whitespace characters
+      
+      // TODO: source code normalisation should go here
+      
+      fingerprint = computeFingerprint(processedLine, algorithm);
+      currentLine = new Line( processedLine, lineNumber, fingerprint );
+      
+      // storing the read line and its attributes:
+      lineNumberTable.put( lineNumber, currentLine );
+      
+      if ( hashCodeTable.containsKey( fingerprint ) ) // a collision has happened
+      {
+        // checking to see if this really is a block of collisions, rather than sequence of random collisions with random lines:
+        if ( inCollisionBlock )
+        {
+          offset = lineNumber - currentCollisionStart;
+          
+          // if it is not (or no longer) a collision block (but a new collision has occurred, which may be a new collision block):
+          if
+          (
+            ( ! lineNumberTable.get(colliderStart + offset).fingerprint.equals( fingerprint ) ) ||
+            ( ! previousFingerprint.equals( fingerprint ) )
+          )
+          {
+            inCollisionBlock = false;
+            currentCollisionEnd = lineNumber - 1;
+            clones.add( new Clone( colliderStart, currentCollisionStart, currentCollisionEnd - currentCollisionStart ) );
+          }
+        }
+        
+        // entering a new collision block:
+        if ( ! inCollisionBlock )
+        {
+          inCollisionBlock = true;
+          currentCollisionStart = lineNumber;
+          if ( previousFingerprint.equals( fingerprint ) ) { currentCollisionStart--; }
+          colliderStart = hashCodeTable.get( fingerprint ).getFirst().lineNumber;
+        }
+        
+        currentList = hashCodeTable.remove( fingerprint );
+        currentList.add( currentLine );
+        hashCodeTable.put( fingerprint, currentList );
+      }
+      else // no collision has happened
+      {
+        currentList = new LinkedList<Line>();
+        currentList.add( currentLine );
+        hashCodeTable.put( fingerprint, currentList );
+        
+        // exiting the current collision block:
+        if ( inCollisionBlock )
+        {
+          inCollisionBlock = false;
+          currentCollisionEnd = lineNumber - 1;
+          clones.add( new Clone( colliderStart, currentCollisionStart, currentCollisionEnd - currentCollisionStart ) );
+        }
+      }
+      
+      previousFingerprint = fingerprint;
+    }
+    
+    in.close();
+    return clones;
 	}
 	
 	/**
@@ -46,8 +144,8 @@ public class CloneDetector {
 	}
 		
 	
-	// BUG: Cannot find a clone if it's on the last line of the file.
-	public ArrayList<Clone> findClonesFromFingerprints(List<BigInteger> fingerprints) {
+	// BUG: Cannot find a clone if it's on the last line of the file (fixed?)
+	/*public ArrayList<Clone> findClonesFromFingerprints(List<BigInteger> fingerprints) {
 		ArrayList<Clone> clones = new ArrayList<Clone>();
 		// Build comparison matrix between hashes:
 		for (int i = 0; i < fingerprints.size(); i++) { // i is the main pointer
@@ -76,7 +174,7 @@ public class CloneDetector {
 			}
 		}
 		return clones;
-	}
+	}*/
 
 	public static BigInteger computeFingerprint(String line, String algorithm) throws NoSuchAlgorithmException {
 
