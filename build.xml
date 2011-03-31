@@ -3,11 +3,14 @@
 
 	<!-- set global properties for this build -->
 	<property name="src.dir" location="src" />
+	<property name="test.dir" location="src/uk/ac/ucl/cs/clonedetector/test" />
+	<property name="reports.tests" location="test-report" />
 	<property name="lib.dir" value="lib" />
 	<property name="build.dir" location="build" />
 	<property name="javadoc.dir" value="javadoc" />
 	<property name="dist.dir" location="dist" />
 	<property name="debug" value="off" />
+	
 
 
 	<path id="classpath">
@@ -21,6 +24,7 @@
 		<delete dir="${build.dir}" quiet="true" />
 		<delete dir="${dist.dir}" quiet="true" />
 		<delete dir="${javadoc.dir}" quiet="true" />
+		<delete dir="${reports.tests}" quiet="true" />
 	</target>
 
 	<target name="init">
@@ -28,9 +32,10 @@
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${dist.dir}/lib" />
 		<mkdir dir="${javadoc.dir}" />
+		<mkdir dir="${reports.tests}" />
 	</target>
 
-	<target name="compile" depends="init" description="compile the source ">
+	<target name="compile" description="compile the source ">
 		<javac 
 			debug="${debug}" 
 			source="1.5" 
@@ -59,7 +64,24 @@
         </javadoc>
 		
 	</target>
+	
+	<target name="test" description="Execute JUnit tests">
+		<junit>
+			<classpath>
+				<pathelement location="${build.tests}"/>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>		
+			
+			<formatter type="plain"/>
+			
+			<batchtest fork="yes" todir="${reports.tests}">
+			    <fileset dir="${test.dir}"/>
+			</batchtest>
+		</junit>
+	</target>
 
-	<target name="all" depends="clean, compile, dist" />
+	<target name="all" depends="clean, init, test, compile, dist" />
 
 </project>
