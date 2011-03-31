@@ -31,7 +31,7 @@ String lang;
 		assertEquals(normlang.normalize("double foo = 12.3"), "double%VAR%=12.3");
 		assertEquals(normlang.normalize("float foo = 12.3"), "float%VAR%=12.3");
 		assertEquals(normlang.normalize("byte foo = 4"), "byte%VAR%=4");
-		//assertEquals(normlang.normalize("char foo = \"c\""), "char%VAR%=\"c\"");
+		assertEquals(normlang.normalize("char foo = \"c\""), "char%VAR%=\"%VAR%\"");
 		
 		//Test case with added keywords
 		assertEquals(normlang.normalize("public static int foo = 4"), "publicstaticint%VAR%=4");
@@ -52,7 +52,7 @@ String lang;
 		//Test case for non-equal normalisation when language is or is not specified
 		assertFalse(normlang.normalize("int foo = 4").equals(normnolang.normalize("int foo = 4")));
 		
-		//Test case for strip white space
+		//Test case for stripping white space
 		assertEquals(normnolang.normalize("a                   b                   c"), "abc");
 	}
 }

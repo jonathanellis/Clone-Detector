@@ -31,8 +31,8 @@ public class CloneDetectorTest {
 	@Test
 	public void test_getExtension() {
 		//Tests for cases which should return ""
-		//assertEquals(CloneDetector.getExtension("path/to/file/noextension"), "");
-		//assertEquals(CloneDetector.getExtension(""), "");
+		assertEquals(CloneDetector.getExtension("path/to/file/noextension"), "");
+		assertEquals(CloneDetector.getExtension(""), "");
 		
 		//Tests for cases which should return correct extension
 		assertEquals(CloneDetector.getExtension("path/to/code.java"), "java");
