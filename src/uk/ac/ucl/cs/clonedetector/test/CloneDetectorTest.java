@@ -29,6 +29,7 @@ public class CloneDetectorTest {
 	public void test_computeFingerprint() throws NoSuchAlgorithmException {
 		assertEquals(CloneDetector.computeFingerprint("", "MD5"), BigInteger.ZERO);
 		//assertEquals(CloneDetector.computeFingerprint("%hello_2819£%^", "MD5"), new BigInteger());
+		//testcomment from tom
 	}
 
 
