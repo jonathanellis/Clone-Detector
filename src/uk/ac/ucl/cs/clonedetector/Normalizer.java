@@ -11,16 +11,18 @@ import java.io.IOException;
  * Class description
  */
 public class Normalizer {
-	
+
 	/**
-	 * 
+	 * The type of file in question
 	 */
-	String lang;
-	
+	private String lang;
+
 	/**
-	 * 
+	 * The keywords for the language in question </br> <Strong>Note:</strong> A
+	 * .txt file for example has no keywords, while something like a .java file
+	 * will have keywords like <code>for</code>, <code>while<code/>, etc.
 	 */
-	String keywords = "";
+	private String keywords = "";
 
 	/**
 	 * Constructs a <code>Normalizer</code> using the passed parameter
@@ -30,21 +32,41 @@ public class Normalizer {
 	public Normalizer(String lang) {
 		this.lang = lang;
 		BufferedReader in;
-		
+
 		try {
 			in = new BufferedReader(new FileReader("lang/" + lang + ".keywords"));
-			
+			StringBuilder stringBuilder = new StringBuilder();
+
 			String line;
 			while ((line = in.readLine()) != null) {
-				keywords += line + "|";
+				stringBuilder.append(line + "|");
 			}
-			
+
+			keywords = stringBuilder.toString();
 			keywords = keywords.substring(0, keywords.length() - 1);
 			in.close();
-			
+
 		} catch (IOException e) {
 			// Language does not exist, do nothing.
 		}
+	}
+
+	/**
+	 * Gets the type of file
+	 * 
+	 * @return language
+	 */
+	public String getLanguage() {
+		return lang;
+	}
+
+	/**
+	 * Gets the keywords
+	 * 
+	 * @return keywords
+	 */
+	public String getKeywords() {
+		return keywords;
 	}
 
 	/**
@@ -58,12 +80,13 @@ public class Normalizer {
 	 */
 	public String normalize(String string) {
 		if (!keywords.equals("")) {
-			String regexp = "((?!(" + keywords + ")\\b)\\b[A-Za-z][A-Za-z0-9]*)";
+			String regexp = "((?!(" + keywords
+					+ ")\\b)\\b[A-Za-z][A-Za-z0-9]*)";
 
 			// normalise variables
-			string = string.replaceAll(regexp, "%VAR%"); 
+			string = string.replaceAll(regexp, "%VAR%");
 		}
-		
+
 		// strip whitespace
 		string = string.replaceAll("\\s*", "");
 		return string;
