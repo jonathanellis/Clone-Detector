@@ -75,8 +75,11 @@ public class Normalizer {
 	 * keywords when normalizing identifiers).
 	 * All strings are also normalized: This includes both single- and double-quoted
 	 * strings and strings where the quotes have been escaped within the string.
-	 * @param line
-	 * @return
+	 * 
+	 * @param string
+	 * 		the content to normalize
+	 * 
+	 * @return the normalized string
 	 */
 	public String normalize(String string) {
 		if (!keywords.equals("")) {
