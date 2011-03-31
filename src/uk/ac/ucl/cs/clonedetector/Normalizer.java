@@ -85,10 +85,12 @@ public class Normalizer {
 		if (!keywords.equals("")) {
 			String regexp_var = "((?!(" + keywords + ")\\b)\\b[A-Za-z][A-Za-z0-9]*)";
 			String regexp_str = "([\"'])(?:\\\\?+.)*?\\1";
-			String regexp_num = "[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?";
+			String regexp_num = "\\b[0-9]+(\\.[0-9]+)?(e[+-]?[0-9]+)?\\b";
+		//	String regexp_com = "//.*|/\\*[\\s\\S]*?\\*/";
 			string = string.replaceAll(regexp_var, "%VAR%");	// Normalize variables
 			string = string.replaceAll(regexp_str, "%STR%");	// Normalize strings
 			string = string.replaceAll(regexp_num, "%NUM%");	// Normalize numbers
+		//	string = string.replaceAll(regexp_com, ""); 		// Strip comments
 		}
 		string = string.toLowerCase();
 		string = string.replaceAll("\\s*", ""); 		// strip whitespace
