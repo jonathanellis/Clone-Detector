@@ -1,9 +1,8 @@
 package uk.ac.ucl.cs.clonedetector.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
 
 import org.junit.After;
 import org.junit.Before;
