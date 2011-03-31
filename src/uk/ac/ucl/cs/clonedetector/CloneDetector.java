@@ -67,6 +67,12 @@ public class CloneDetector
     {
       lineNumber++;
       String processedLine = line.replaceAll("\\s*", ""); // \s matches all whitespace characters
+
+      fingerprint = computeFingerprint(processedLine, algorithm);
+      currentLine = new Line(lineNumber, processedLine, fingerprint);
+      
+      // storing the read line and its attributes:
+      lineNumberTable.put( lineNumber, currentLine );
       
       if ( processedLine.equals("") )
       {
@@ -86,12 +92,6 @@ public class CloneDetector
       
       // TODO: source code normalisation should go here
       
-      fingerprint = computeFingerprint(processedLine, algorithm);
-      currentLine = new Line(lineNumber, processedLine, fingerprint);
-      
-      // storing the read line and its attributes:
-      lineNumberTable.put( lineNumber, currentLine );
-      
       if ( hashCodeTable.containsKey( fingerprint ) ) // a collision has happened
       {
         // checking to see if this really is a block of collisions, rather than sequence of random collisions with random lines:
@@ -100,6 +100,13 @@ public class CloneDetector
           offset = lineNumber - currentCollisionStart;
           
           // if it is not (or no longer) a collision block (but a new collision has occurred, which may be a new collision block):
+          if ( lineNumberTable.get(colliderStart + offset) == null )
+          {
+            System.out.println("lineNumber is: " + lineNumber);
+            System.out.println("collderStart is: " + colliderStart);
+            System.out.println("offset is: " + offset);
+            System.out.println("NULL"); System.exit(0);
+          }
           if
           (
             ( ! lineNumberTable.get(colliderStart + offset).getFingerprint().equals( fingerprint ) )// ||
