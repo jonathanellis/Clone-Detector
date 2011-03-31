@@ -70,25 +70,23 @@ public class Normalizer {
 	}
 
 	/**
-	 * Normalizes a given string. If a language has been specified and exists
-	 * then the string will be normalized under that language's keywords (i.e.
-	 * will ignore any keywords when normalizing identifiers).
-	 * 
-	 * @param string
-	 * 
-	 * @return the normalized string
+	 * Normalizes a given string. If a language has been specified and exists then the
+	 * string will be normalized under that language's keywords (i.e. will ignore any
+	 * keywords when normalizing identifiers).
+	 * All strings are also normalized: This includes both single- and double-quoted
+	 * strings and strings where the quotes have been escaped within the string.
+	 * @param line
+	 * @return
 	 */
 	public String normalize(String string) {
 		if (!keywords.equals("")) {
-			String regexp = "((?!(" + keywords
-					+ ")\\b)\\b[A-Za-z][A-Za-z0-9]*)";
-
-			// normalise variables
-			string = string.replaceAll(regexp, "%VAR%");
+			String regexp_var = "((?!(" + keywords + ")\\b)\\b[A-Za-z][A-Za-z0-9]*)";
+			String regexp_str = "([\"'])(?:\\\\?+.)*?\\1";
+			string = string.replaceAll(regexp_var, "%VAR%");	// Normalize variables
+			string = string.replaceAll(regexp_str, "%STR%");	// Normalize strings
 		}
-
-		// strip whitespace
-		string = string.replaceAll("\\s*", "");
+		string = string.toLowerCase();
+		string = string.replaceAll("\\s*", ""); 		// strip whitespace
 		return string;
 	}
 
