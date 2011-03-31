@@ -29,9 +29,6 @@ public class LineTest {
 	public void tearDown() throws Exception {
 	}
 
-
-	
-	
 	@Test
 	public void test_hashCode()  {
 		assertEquals(l.hashCode(), BigInteger.ZERO.hashCode());
@@ -41,7 +38,6 @@ public class LineTest {
 	public void test_equals()  {
 		assertEquals(l.equals(new Line(14, "line", BigInteger.ZERO)), true);
 		assertEquals(l.equals(l2), false);
-		
 	}
 	
 	@Test

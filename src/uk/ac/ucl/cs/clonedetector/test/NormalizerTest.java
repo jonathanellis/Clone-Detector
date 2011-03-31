@@ -10,9 +10,13 @@ import uk.ac.ucl.cs.clonedetector.Normalizer;
 public class NormalizerTest {
 String lang;
 
+Normalizer normlang;
+Normalizer normnolang;
+
 	@Before
 	public void setUp() throws Exception {
-	
+		normlang = new Normalizer("java");
+		normnolang = new Normalizer("");
 	}
 
 	@After
@@ -23,8 +27,7 @@ String lang;
 	@Test
 	public void test_normalize()  {
 		//Fixture objects with and without language specified
-		Normalizer normlang = new Normalizer("java");
-		Normalizer normnolang = new Normalizer("");
+		
 		
 		//Test cases for var replacement
 		assertEquals(normlang.normalize("int foo = 4"), "int%VAR%=4");
@@ -54,5 +57,16 @@ String lang;
 		
 		//Test case for stripping white space
 		assertEquals(normnolang.normalize("a                   b                   c"), "abc");
+	}
+	
+	@Test
+	public void test_getLanguage(){
+		assertEquals(normlang.getLanguage(), "java");
+	}
+	
+	@Test
+	public void test_getKeywords(){
+		String keyword = normlang.getKeywords().substring(0, 8);
+		assertEquals(keyword, "abstract");
 	}
 }
