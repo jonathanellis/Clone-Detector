@@ -164,7 +164,7 @@ public class CloneDetector {
 	 */
 	public static String getExtension(String filename) {
 		String chunks[] = filename.split("\\.");
-		if (chunks.length > 0) return chunks[chunks.length-1];
+		if (chunks.length > 0) return chunks[chunks.length - 1];
 		return "";
 	}
 		
@@ -210,20 +210,20 @@ public class CloneDetector {
 		if (line.equals("")) return BigInteger.ZERO;
 		
 		BigInteger fingerprint = null;
-		MessageDigest m = MessageDigest.getInstance(algorithm);
-		m.update(line.getBytes(), 0, line.length());
-		fingerprint = new BigInteger(1, m.digest());
+		MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+		messageDigest.update(line.getBytes(), 0, line.length());
+		fingerprint = new BigInteger(1, messageDigest.digest());
 		return fingerprint;
 	}
 	
 	
 	// Handles all the output:
 	public void findClonesFromFiles(String[] filenames, String algorithm) throws FileNotFoundException, NoSuchAlgorithmException, IOException {
-		for (int i=0; i<filenames.length; i++) {
+		for (int i=0; i < filenames.length; i++) {
 			if (filenames.length > 1) System.out.println(filenames[i]);
 			ArrayList<Clone> clones = findClones(filenames[i], algorithm);
 			for (Clone clone : clones) System.out.println(clone);
-			if (filenames.length > 1 && i<filenames.length-1) System.out.println("");
+			if (filenames.length > 1 && i < filenames.length - 1) System.out.println("");
 		}
 	}
 

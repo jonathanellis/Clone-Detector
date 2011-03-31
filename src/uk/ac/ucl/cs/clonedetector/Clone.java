@@ -8,7 +8,7 @@ package uk.ac.ucl.cs.clonedetector;
  * Class definition
  */
 public class Clone {
-	
+
 	/**
 	 * Instance variable def
 	 */
@@ -39,6 +39,7 @@ public class Clone {
 	
 	@Override
 	public String toString() {
-		return String.format("%d-%d:%d-%d", iStart, iStart+length, jStart, jStart+length);
+		return String.format("%d-%d:%d-%d", this.iStart, this.iStart + this.length, 
+				this.jStart, this.jStart + length);
 	}
 }
