@@ -75,6 +75,9 @@ public class CloneDetector {
 		LinkedList<Line> currentList;
 		boolean inCollisionBlock = false;
 
+		//TODO: Check if this is in the correct place
+		Normalizer normalizer = new Normalizer(getExtension(filename));
+		
 		while ((line = in.readLine()) != null) {
 			lineNumber++;
 
@@ -82,7 +85,8 @@ public class CloneDetector {
 			 * \s matches all whitespace characters
 			 */
 			String processedLine = line.replaceAll("\\s*", "");
-
+			processedLine = normalizer.normalize(processedLine);
+			
 			fingerprint = computeFingerprint(processedLine, algorithm);
 			currentLine = new Line(lineNumber, processedLine, fingerprint);
 
