@@ -86,7 +86,7 @@ public class CloneDetector {
 			 */
 			String processedLine = line.replaceAll("\\s*", "");
 			processedLine = normalizer.normalize(processedLine);
-			
+			//System.out.println(processedLine); // uncomment for debug
 			fingerprint = computeFingerprint(processedLine, algorithm);
 			currentLine = new Line(lineNumber, processedLine, fingerprint);
 
