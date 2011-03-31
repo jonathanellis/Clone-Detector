@@ -49,8 +49,7 @@ public class Clone implements Comparable<Clone> {
 	}
 	
 	@Override
-	public int compareTo(Clone other)
-	{
-	  return this.getiStart() - other.getiStart();
+	public int compareTo(Clone other) {
+		return new Integer(iStart).compareTo(new Integer(other.getiStart()));
 	}
 }
