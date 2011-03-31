@@ -56,8 +56,10 @@ public class CloneDetector {
 			fingerprints.add(fingerprint);
 		}
 		return findClonesFromFingerprints(fingerprints);*/
-	  
 	   
+	//normaliser re-added	
+	Normalizer n = new Normalizer(getExtension(filename));
+		
     ArrayList<Clone> clones = new ArrayList<Clone>();
     
     // The HashTable class is not used because we want to see the collisions happening:
@@ -90,7 +92,8 @@ public class CloneDetector {
       // \s matches all whitespace characters
       String processedLine = line.replaceAll("\\s*", ""); 
       
-      // TODO: source code normalisation should go here
+      //source code normalisation should go here
+       n.normalize(processedLine);
       
       fingerprint = computeFingerprint(processedLine, algorithm);
       currentLine = new Line( processedLine, lineNumber, fingerprint );
@@ -119,6 +122,7 @@ public class CloneDetector {
         }
         
         // entering a new collision block:
+        
         if ( ! inCollisionBlock )
         {
           inCollisionBlock = true;
@@ -126,10 +130,10 @@ public class CloneDetector {
           if ( previousFingerprint.equals( fingerprint ) ) { currentCollisionStart--; }
           colliderStart = hashCodeTable.get( fingerprint ).getFirst().lineNumber;
         }
-        
         currentList = hashCodeTable.remove( fingerprint );
         currentList.add( currentLine );
         hashCodeTable.put( fingerprint, currentList );
+        
       }
       else // no collision has happened
       {
