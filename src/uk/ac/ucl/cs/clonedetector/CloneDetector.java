@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2011 Team Apollo
+ */
 package uk.ac.ucl.cs.clonedetector;
 
 import java.io.BufferedReader;
@@ -11,9 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class CloneDetector
-{
-  /*
+/**
+ * Class Def. 
+ */
+public class CloneDetector {
+	
+  /**
    * The number of input lines which the algorithm expects:
    * (this is a soft limit: the algorithm needs to know it only for performance reasons)
    */
@@ -22,12 +28,18 @@ public class CloneDetector
 
 	/**
 	 * Find clones in the given filename using the specified algorithm.
+	 * 
 	 * @param filename
+	 *            the name of file to find clones in
 	 * @param algorithm
+	 *  		  the algorithm to be used to find clones
+	 *  
 	 * @return
+	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
-	 * @throws NoSuchAlgorithmException Thrown if the algorithm is not available on the system.
+	 * @throws NoSuchAlgorithmException
+	 *             Thrown if the algorithm is not available on the system.
 	 */
 	public ArrayList<Clone> findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException
 	{
@@ -49,7 +61,8 @@ public class CloneDetector
     ArrayList<Clone> clones = new ArrayList<Clone>();
     
     // The HashTable class is not used because we want to see the collisions happening:
-    HashMap< BigInteger, LinkedList<Line> > hashCodeTable = new HashMap< BigInteger, LinkedList<Line> >(NUMBER_OF_LINES);
+    HashMap<BigInteger, LinkedList<Line>> hashCodeTable = new HashMap<BigInteger, LinkedList<Line>>(NUMBER_OF_LINES);
+    
     // there couldn't possibly be collisions between line numbers (as each line has a unique line number), so no linked lists are needed:
     HashMap<Integer, Line> lineNumberTable = new HashMap<Integer, Line>(NUMBER_OF_LINES);
     
@@ -57,16 +70,25 @@ public class CloneDetector
     
     // re-using variables for performance reasons (the garbage collector won't have to do so much work this way):
     String line;
-    BigInteger fingerprint = null, previousFingerprint = null; // "previousFingerprint" is the fingerprint of the line immediately prior to the current line
+    
+    // "previousFingerprint" is the fingerprint of the line immediately prior to the current line
+    BigInteger fingerprint, previousFingerprint = null; 
+    
     Line currentLine;
-    int currentCollisionStart = 0, currentCollisionEnd = 0, colliderStart = 0, offset = 0; // "collider" is what the collision is colliding with 
+    
+    // "collider" is what the collision is colliding with
+    int currentCollisionStart = 0, currentCollisionEnd = 0, colliderStart = 0, offset = 0;
+    
+    int lineNumber = 0;
     LinkedList<Line> currentList;
     boolean inCollisionBlock = false;
-    int lineNumber = 0;
+    
     while ( (line = in.readLine() ) != null)
     {
       lineNumber++;
-      String processedLine = line.replaceAll("\\s*", ""); // \s matches all whitespace characters
+      
+      // \s matches all whitespace characters
+      String processedLine = line.replaceAll("\\s*", ""); 
       
       // TODO: source code normalisation should go here
       
@@ -132,9 +154,12 @@ public class CloneDetector
 	}
 	
 	/**
-	 * Retrieves the file extension from a given relative or absolute filename. Filenames
-	 * with no extension return "".
-	 * @param filename Filename to get the extension for
+	 * Retrieves the file extension from a given relative or absolute filename. 
+	 * Filenames with no extension return "".
+	 * 
+	 * @param filename 
+	 * 			  Filename to get the extension for
+	 * 
 	 * @return Extension for the filename
 	 */
 	public static String getExtension(String filename) {
