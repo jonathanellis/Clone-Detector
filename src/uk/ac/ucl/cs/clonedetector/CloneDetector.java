@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class CloneDetector {
 
-	private Index index = new Index();
 
 	/**
 	 * Find clones in the given filename using the specified algorithm.
@@ -24,7 +23,7 @@ public class CloneDetector {
 	 * @throws NoSuchAlgorithmException
 	 *             Thrown if the algorithm is not available on the system.
 	 */
-	public CloneManager findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
+	public CloneManager findClones(Index index, String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
 		CloneManager cloneManager = new CloneManager();
 		Normalizer normalizer = new Normalizer(getExtension(filename));
 		String line;
@@ -101,37 +100,27 @@ public class CloneDetector {
 		 * Else hand over to MessageDigest:
 		 */
 
-		if (line.equals(""))
-			return BigInteger.ZERO;
+		if (line.equals("")) return BigInteger.ZERO;
 
-		BigInteger fingerprint = null;
 		MessageDigest m = MessageDigest.getInstance(algorithm);
 		m.update(line.getBytes(), 0, line.length());
-		fingerprint = new BigInteger(1, m.digest());
+		BigInteger fingerprint = new BigInteger(1, m.digest());
 		return fingerprint;
 	}
 
-	public void info(String[] fileNames){
-		System.out.print("Searching for clones in ");
-		for (int i = 1; i < fileNames.length; i++) {
-			System.out.print(fileNames[i] + " ");
-		}
-
-		System.out.println();
-	}
 	
 	/*
 	 * Handles all the output:
 	 */
-	public void findClones(String algorithm, String[] fileNames) {
-		info(fileNames);
+	public void findClones(String algorithm, String[] filenames) {
+		Index index = new Index();
 		
-		for (int i = 1; i < fileNames.length; i++) {
+		for (int i = 0; i < filenames.length; i++) {
 			try {
-				CloneManager clones = findClones(fileNames[i], algorithm);
+				System.out.println(filenames[i] + ":");
+				CloneManager clones = findClones(index, filenames[i], algorithm);
 				System.out.println(clones);
-
-				if (fileNames.length > 1 && i < fileNames.length - 1)
+				if (filenames.length > 1 && i < filenames.length - 1) // if it's the final line
 					System.out.println("");
 			} catch (FileNotFoundException e) {
 				System.err.println("File not found!");
@@ -145,11 +134,10 @@ public class CloneDetector {
 
 	public static void main(String[] args) {
 		CloneDetector cd = new CloneDetector();
-
-		if (args.length < 2) {
-			System.out.println("USAGE: java -jar clone.java <algorithm> <filename(s)>");
+		if (args.length < 1) {
+			System.out.println("USAGE: java -jar clone.java <filename(s)>");
 		} else {
-			cd.findClones(args[0], args);
+			cd.findClones("StringHashCode", args);
 		}
 	}
 }

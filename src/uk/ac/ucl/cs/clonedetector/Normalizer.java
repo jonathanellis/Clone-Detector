@@ -83,7 +83,7 @@ public class Normalizer {
 	 */
 	public String normalize(String string) {
 		if (!keywords.equals("")) {
-			String regexp_var = "((?!(" + keywords + ")\\b)\\b[A-Za-z][A-Za-z0-9]*)";
+			String regexp_var = "((?!(" + keywords + ")\\b)\\b[A-Za-z_][A-Za-z0-9_]*)";
 			String regexp_str = "([\"'])(?:\\\\?+.)*?\\1";
 			String regexp_num = "\\b[0-9]+(\\.[0-9]+)?(e[+-]?[0-9]+)?\\b";
 		//	String regexp_com = "//.*|/\\*[\\s\\S]*?\\*/";
