@@ -57,15 +57,36 @@ public class CloneTest extends TestCase {
 	}
 	
 	@Test
+	public void test_getLength() {
+		
+		assertEquals(c.getLength(), 1);
+	}
+	
+	@Test
+	public void test_encompasses() {
+		Reference r = new Reference("filename", 26);
+		Reference r2 =new Reference("filename", 28);
+		Reference r3 =new Reference("filename", 29);
+		Reference r4 =new Reference("filename", 20);
+		Clone c5 = new Clone(r,r2,r3,r4);
+		assertEquals(c.encompasses(c5), false);
+		
+		assertEquals(c.encompasses(c), true);
+		
+		//Test different file names for iStart and jSTart
+		Reference r5 =new Reference("different", 20);
+		c5 = new Clone(r,r2,r5,r4);
+		assertEquals(c.encompasses(c5), false);
+		
+	}
+	
+	
+	@Test
 	public void test_compareTo() {
 		assertTrue(c.compareTo(c3) < 0);
 		assertTrue(c3.compareTo(c) > 0);
 	}
-	
-	
-	
-	
-	
+
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite(CloneTest.class);
 		return  suite;
