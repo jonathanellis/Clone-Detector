@@ -29,9 +29,6 @@ public class Reference implements Cloneable {
 		return new Reference(filename, line);
 	}
 	
-	public String toString() {
-		return "(" + filename + ")" + line;
-	}
 	
 	public boolean equals(Object o) {
 		if (o instanceof Reference) {

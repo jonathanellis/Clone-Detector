@@ -31,8 +31,10 @@ public class CloneDetector {
 		Reference iCurrent = new Reference(filename, 1);
 
 		Reference iStart = null;
+		Reference iEnd = null;
 		Reference jStart = null;
-		int matchLength = -1;
+		Reference jEnd = null;
+		
 		Reference jPrev = null;
 		
 		BufferedReader in = new BufferedReader(new FileReader(filename));
@@ -44,22 +46,25 @@ public class CloneDetector {
 			ArrayList<Reference> matchingLines = index.lookup(fingerprint);
 
 			// Start of a new match:
-			if (matchingLines.size() > 0 && matchLength == -1) {
-				Reference earliestMatch = matchingLines.get(0);
-				jPrev = earliestMatch;
-				iStart = iCurrent;
-				jStart = earliestMatch;
-				matchLength = 0;
-			} else if (matchLength > -1) {
+			if (matchingLines.size() > 0 && iStart == null) {
+				Reference firstMatch = matchingLines.get(0);
+				jPrev = firstMatch.clone();
+				
+				iStart = iCurrent.clone();
+				iEnd = iStart.clone();
+				jStart = firstMatch.clone();
+				jEnd = jStart.clone();
+			} else if (iStart != null) {
 				if (matchingLines.contains(jPrev.successor())) { // continue match
-					matchLength++;
+					iEnd.incLine();
+					jEnd.incLine();
 					jPrev.incLine();
 				} else { // end match
-					cloneManager.add(iStart, jStart, matchLength - 1);
+					cloneManager.add(iStart, iEnd, jStart, jEnd);
 					iStart = null;
+					iEnd = null;
 					jStart = null;
 					jPrev = null;
-					matchLength = -1;
 				}
 			}
 

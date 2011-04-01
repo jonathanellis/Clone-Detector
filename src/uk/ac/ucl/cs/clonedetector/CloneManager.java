@@ -6,8 +6,8 @@ import java.util.Collections;
 public class CloneManager {
 	ArrayList<Clone> clones = new ArrayList<Clone>();
 	
-	public void add(Reference iStart, Reference jStart, int length) {
-		clones.add(new Clone(iStart, jStart, length));
+	public void add(Reference iStart, Reference iEnd, Reference jStart, Reference jEnd) {
+		clones.add(new Clone(iStart, iEnd, jStart, jEnd));
 	}
 	
 	public String toString() {
