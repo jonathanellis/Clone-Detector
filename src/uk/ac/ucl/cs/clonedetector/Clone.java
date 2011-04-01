@@ -7,7 +7,7 @@ package uk.ac.ucl.cs.clonedetector;
  * <code>Clone</code> stores information about clones (starting position, and
  * the length of the clone).
  */
-public class Clone {
+public class Clone implements Comparable<Clone> {
 
 	/**
 	 * The start of the first block that collides
@@ -39,10 +39,17 @@ public class Clone {
 		this.jStart = jStart;
 		this.length = length;
 	}
+	
+	public int getiStart() { return iStart; }
 
 	@Override
 	public String toString() {
 		return String.format("%d-%d:%d-%d", this.iStart, this.iStart
 				+ this.length, this.jStart, this.jStart + length);
+	}
+	
+	@Override
+	public int compareTo(Clone other) {
+		return new Integer(iStart).compareTo(new Integer(other.getiStart()));
 	}
 }
