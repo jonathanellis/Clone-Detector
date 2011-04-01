@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011 Team Apollo
+ */
+
 package uk.ac.ucl.cs.clonedetector;
 
 import java.io.BufferedReader;
@@ -42,23 +46,24 @@ public class CloneDetector {
 			ArrayList<Reference> postings = index.lookup(fingerprint); // Fetch the postings list
 			if (postings.size() > 1) {
 				for (Reference iStart : postings) {
-					for (Reference jStart : postings) {
-						if (iStart != jStart) {
+					for (Reference jStart : postings) { // Consider all (i,j) permutations...
+						if (iStart != jStart) { // where i != j
 							Reference iEnd = iStart.clone();
 							Reference jEnd = jStart.clone();
 							Reference i = iStart.clone();
 							Reference j = jStart.clone();
 							boolean matching = true;
 							
-							while (matching) {
-								// This is the start of a clone
+							while (matching) { // While we are in a match
+								// Increment the pointer
 								Reference iNext = i.next();
 								Reference jNext = j.next();
 							
+								// Look up the hash of he next line
 								BigInteger iNextFingerprint = index.lookup(iNext);
 								
 								ArrayList<Reference> iNextPostings = index.lookup(iNextFingerprint);
-								if (iNextPostings.contains(jNext)) {
+								if (iNextPostings.contains(jNext)) { // If the postings list contains j+1 then the clone continues
 									i = iNext;
 									j = jNext;
 									iEnd.incLine();
@@ -67,6 +72,7 @@ public class CloneDetector {
 									matching = false;
 								}
 							}
+							// Add the clone to the cloneManager:
 							Clone c = new Clone(iStart, iEnd, jStart, jEnd);
 							cloneManager.add(c);
 						}
@@ -77,8 +83,9 @@ public class CloneDetector {
 		return cloneManager;
 	}
 
-	/*
-	 * Handles all the output:
+	/**
+	 * This method handles all of the output for the program and is the overall controller
+	 * responsible for building the index, finding the clones and then outputting the result.
 	 */
 	public void findClones() {
 		Index index = new Index();

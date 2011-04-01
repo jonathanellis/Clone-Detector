@@ -7,6 +7,11 @@ public class Options {
 	private int cloneMinLength = 2;	// Default value
 	private String algorithm = "StringHashCode";	// Default value
 	
+	/**
+	 * Parses the command line objects and initializes the Options class to be configured
+	 * with the options supplied at the command line.
+	 * @param args The command line arguments to be parsed.
+	 */
 	public Options(String[] args) {
 		// Parse arguments:
 		int mode = 0; // holds the mode we are in (0 = filenames, 1 = clone length, 2 = algorithm)

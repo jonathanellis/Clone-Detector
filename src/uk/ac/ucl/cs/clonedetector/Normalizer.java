@@ -25,8 +25,8 @@ public class Normalizer {
 	private String keywords = "";
 
 	/**
-	 * Constructs a <code>Normalizer</code> using the passed parameter
-	 * 
+	 * Constructs a <code>Normalizer</code> using the passed parameter as the language
+	 * under which to perform the normalization. 
 	 * @param lang
 	 */
 	public Normalizer(String lang) {
@@ -52,7 +52,7 @@ public class Normalizer {
 	}
 
 	/**
-	 * Gets the type of file
+	 * Gets the language that the normalizer is currently using.
 	 * 
 	 * @return language
 	 */
@@ -61,7 +61,7 @@ public class Normalizer {
 	}
 
 	/**
-	 * Gets the keywords
+	 * Gets a list of keywords for the current language.
 	 * 
 	 * @return keywords
 	 */

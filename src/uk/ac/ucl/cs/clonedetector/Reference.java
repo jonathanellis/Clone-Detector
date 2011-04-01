@@ -1,15 +1,29 @@
+
 package uk.ac.ucl.cs.clonedetector;
 
+
 public class Reference implements Cloneable, Comparable<Reference> {
-	private String filename;
-	private int line;
-	private Reference next;
+	private String filename;	// Filename being referenced
+	private int line;			// Line number being referenced (from 1)
+	private Reference next;		// Pointer to the next reference
 	
+	/**
+	 * Creates a reference to a line in a file.
+	 * @param filename The filename referenced.
+	 * @param line The line in the file referenced.
+	 */
 	public Reference(String filename, int line) {
 		this.filename = filename;
 		this.line = line;
 	}
 	
+	/**
+	 * Creates a reference to a line in a file with a pointer to the next reference (used by
+	 * <code>clone()</code>).
+	 * @param filename The filename referenced.
+	 * @param line The line referenced.
+	 * @param next Pointer to the next reference.
+	 */
 	public Reference(String filename, int line, Reference next) {
 		this.filename = filename;
 		this.line = line;
@@ -28,6 +42,10 @@ public class Reference implements Cloneable, Comparable<Reference> {
 		return next;
 	}
 	
+	/**
+	 * Called to set the pointer to the next reference after the object has been created.
+	 * @param next Pointer to the next reference.
+	 */
 	public void setNext(Reference next) {
 		this.next = next;
 	}
