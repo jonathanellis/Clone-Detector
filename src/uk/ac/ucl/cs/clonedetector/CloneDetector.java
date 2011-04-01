@@ -131,7 +131,7 @@ public class CloneDetector {
 			System.out.println("Missing filename");
 		} else {
 			try {
-				cd.findClonesFromFiles(args, "SHA-1");
+				cd.findClonesFromFiles(args, "StringHashCode");
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found!");
 			} catch (IOException e) {
