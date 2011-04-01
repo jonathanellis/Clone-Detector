@@ -28,12 +28,12 @@ public class CloneDetector {
 		CloneManager cloneManager = new CloneManager();
 		Normalizer normalizer = new Normalizer(getExtension(filename));
 		String line;
-		int lineNum = 1;
+		Reference iCurrent = new Reference(filename, 1);
 
-		int iStart = -1;
-		int jStart = -1;
+		Reference iStart = null;
+		Reference jStart = null;
 		int matchLength = -1;
-		int prevMatchingLine = -1;
+		Reference jPrev = null;
 		
 		BufferedReader in = new BufferedReader(new FileReader(filename));
 
@@ -41,29 +41,30 @@ public class CloneDetector {
 			String normalizedLine = normalizer.normalize(line);
 			BigInteger fingerprint = computeFingerprint(normalizedLine, algorithm);
 
-			ArrayList<Integer> matchingLines = index.linesWithFingerprint(fingerprint);
+			ArrayList<Reference> matchingLines = index.lookup(fingerprint);
 
 			// Start of a new match:
 			if (matchingLines.size() > 0 && matchLength == -1) {
-				int earliestMatch = matchingLines.get(0);
-				prevMatchingLine = earliestMatch;
-				iStart = lineNum;
+				Reference earliestMatch = matchingLines.get(0);
+				jPrev = earliestMatch;
+				iStart = iCurrent;
 				jStart = earliestMatch;
-				matchLength = 1;
+				matchLength = 0;
 			} else if (matchLength > -1) {
-				if (matchingLines.contains(prevMatchingLine + 1)) { // continue match
+				if (matchingLines.contains(jPrev.successor())) { // continue match
 					matchLength++;
-					prevMatchingLine++;
+					jPrev.incLine();
 				} else { // end match
 					cloneManager.add(iStart, jStart, matchLength - 1);
-					iStart = -1;
-					jStart = -1;
+					iStart = null;
+					jStart = null;
+					jPrev = null;
 					matchLength = -1;
 				}
 			}
 
-			index.updateIndex(fingerprint, lineNum);
-			lineNum++;
+			index.updateIndex(fingerprint, iCurrent.clone());
+			iCurrent.incLine();
 		}
 		return cloneManager;
 	}

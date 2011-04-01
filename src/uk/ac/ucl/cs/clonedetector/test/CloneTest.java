@@ -18,7 +18,7 @@ public class CloneTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		c = new Clone(1, 10, 3);
+		//c = new Clone(1, 10, 3);
 	}
 
 	@After

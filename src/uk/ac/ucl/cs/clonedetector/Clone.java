@@ -12,12 +12,13 @@ public class Clone implements Comparable<Clone> {
 	/**
 	 * The start of the first block that collides
 	 */
-	private int iStart;
+	private Reference iStart;
+
 
 	/**
 	 * The start of the second block that collides
 	 */
-	private int jStart;
+	private Reference jStart;
 
 	/**
 	 * The length is the length of the collision
@@ -34,9 +35,9 @@ public class Clone implements Comparable<Clone> {
 	 * @param length
 	 *            length is the length of the collision
 	 */
-	public Clone(int iStart, int jStart, int length) {
-		if (iStart > jStart) {
-			int temp = iStart;
+	public Clone(Reference iStart, Reference jStart, int length) {
+		if (iStart.getLine() > jStart.getLine()) {
+			Reference temp = iStart;
 			iStart = jStart;
 			jStart = temp;
 		}
@@ -45,17 +46,24 @@ public class Clone implements Comparable<Clone> {
 		this.jStart = jStart;
 		this.length = length;
 	}
-	
-	public int getiStart() { return iStart; }
 
 	@Override
-	public String toString() {
-		return String.format("%d-%d:%d-%d", this.iStart, this.iStart
-				+ this.length, this.jStart, this.jStart + length);
+	public int compareTo(Clone arg0) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
+	
+	public String toString() {
+		return String.format("%s-%s", this.iStart,this.jStart);
+	}
+	
+/*	public int getiStart() { return iStart; }
+
+	@Override
+
 	
 	@Override
 	public int compareTo(Clone other) {
 		return new Integer(iStart).compareTo(new Integer(other.getiStart()));
-	}
+	}*/
 }

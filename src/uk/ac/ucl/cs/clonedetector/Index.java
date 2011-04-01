@@ -5,22 +5,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Index {
-	private HashMap<BigInteger,ArrayList<Integer>> index = new HashMap<BigInteger,ArrayList<Integer>>();
+	private HashMap<BigInteger,ArrayList<Reference>> index = new HashMap<BigInteger,ArrayList<Reference>>();
 
-	public void updateIndex(BigInteger fingerprint, int lineNumber) {
+	public void updateIndex(BigInteger fingerprint, Reference reference) {
 		if (fingerprint == BigInteger.ZERO) return;
 		
 		if (!index.containsKey(fingerprint)) {
-			index.put(fingerprint, new ArrayList<Integer>());
+			index.put(fingerprint, new ArrayList<Reference>());
 		}
-		index.get(fingerprint).add(lineNumber);
+		index.get(fingerprint).add(reference);
 	}
 	
-	public ArrayList<Integer> linesWithFingerprint(BigInteger fingerprint) {
-		ArrayList<Integer> matches = index.get(fingerprint);
-		if (matches == null) return new ArrayList<Integer>();
+	public ArrayList<Reference> lookup(BigInteger fingerprint) {
+		ArrayList<Reference> matches = index.get(fingerprint);
+		if (matches == null) return new ArrayList<Reference>();
 		return matches;
 	}
 	
+
 	
 }
