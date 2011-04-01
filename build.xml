@@ -67,7 +67,7 @@
 	</target>
 	
 	<target name="test" description="Execute JUnit tests">
-		<junit fork="yes" haltonfailure="yes" printsummary="yes">
+		<junit fork="yes" haltonfailure="no" printsummary="yes">
 			<classpath>
 				<pathelement location="${build.dir}"/>
 				<fileset dir="${lib.dir}">
