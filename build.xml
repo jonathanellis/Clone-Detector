@@ -10,6 +10,7 @@
 	<property name="javadoc.dir" value="javadoc" />
 	<property name="dist.dir" location="dist" />
 	<property name="debug" value="off" />
+	<property name="test.suite" value="uk.ac.ucl.cs.clonedetector.test.AllTests" />
 	
 
 
@@ -66,22 +67,20 @@
 	</target>
 	
 	<target name="test" description="Execute JUnit tests">
-		<junit>
+		<junit fork="yes" haltonfailure="no">
 			<classpath>
-				<pathelement location="${build.tests}"/>
+				<pathelement location="${build.dir}"/>
 				<fileset dir="${lib.dir}">
 					<include name="**/*.jar" />
 				</fileset>
-			</classpath>		
+			</classpath>	
 			
-			<formatter type="plain"/>
+			 <test name="${test.suite}" />
+			<formatter type="plain" usefile="false" />
 			
-			<batchtest fork="yes" todir="${reports.tests}">
-			    <fileset dir="${test.dir}"/>
-			</batchtest>
 		</junit>
 	</target>
 
-	<target name="all" depends="clean, init, test, compile, dist" />
+	<target name="all" depends="clean, init, compile, test, dist" />
 
 </project>
