@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.ac.ucl.cs.clonedetector.Clone;
+import uk.ac.ucl.cs.clonedetector.CloneDetector;
+import uk.ac.ucl.cs.clonedetector.Options;
 import uk.ac.ucl.cs.clonedetector.Reference;
 
 public class CloneTest extends TestCase {
@@ -44,12 +46,18 @@ public class CloneTest extends TestCase {
 	
 	@Test
 	public void test_toString() {
+		String[] args = new String[1];
+		args[0] = "filename";
+		CloneDetector.options = new Options(args);
+		
 		//Test clones are output correctly
-		String output = "(filename)14-15:(filename)16-17";
+		String output = "14-15:16-17";
 		assertEquals(c.toString(), output);
 		
-		String output2 = "(filename)14-15:(filename)16-17";
+		String output2 = "14-15:16-17";
 		assertEquals(c2.toString(), output2);
+	
+
 	}
 	
 	@Test
@@ -61,7 +69,7 @@ public class CloneTest extends TestCase {
 	@Test
 	public void test_getLength() {
 		//Test that length is correctly returned
-		assertEquals(c.getLength(), 1);
+		assertEquals(c.getLength(), 2);
 	}
 	
 	@Test
@@ -92,6 +100,11 @@ public class CloneTest extends TestCase {
 		//Test clones are correctly compared
 		assertTrue(c.compareTo(c3) < 0);
 		assertTrue(c3.compareTo(c) > 0);
+	}
+	
+	@Test
+	public void test_overlapsitself() {
+		assertTrue(!c.overlapsItself());
 	}
 
 	public static TestSuite suite() {

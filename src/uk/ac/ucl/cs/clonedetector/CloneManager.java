@@ -30,7 +30,7 @@ public class CloneManager {
 			for (Clone d : toDelete) {
 				goodClones.remove(d);
 			}
-		}
+		} 
 		
 		// Remove clones that overlap themselves:
 		ArrayList<Clone> toDelete = new ArrayList<Clone>();
@@ -45,7 +45,7 @@ public class CloneManager {
 		}
 		
 		return goodClones;
-	}
+	} 
 	
 	@Override
 	public String toString() {

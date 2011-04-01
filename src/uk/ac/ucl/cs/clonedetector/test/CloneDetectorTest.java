@@ -3,6 +3,7 @@ package uk.ac.ucl.cs.clonedetector.test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.security.NoSuchAlgorithmException;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -72,12 +73,13 @@ public class CloneDetectorTest extends TestCase{
 	}
 	
 	@Test
-	public void test_findClonesAlgotrithmNotFound() throws IOException {
+	public void test_findClonesAlgotrithmNotFound() throws IOException, NoSuchAlgorithmException {
 		//Test that the correct exception is thrown, and the correct message given to the user when a file does not exist
-		CloneDetector c = new CloneDetector();
-		String[] args = new String[1];
+		String[] args = new String[3];
 		args[0] = "text/testing.java";
-		c.findClones("Tom's Algorithm", args);
+		args[1] = "-a";
+		args[2] = "asdggds";
+		CloneDetector.main(args);
 		assertTrue(errContent.toString().contains("No such algorithm"));
 	}
 	
@@ -87,7 +89,7 @@ public class CloneDetectorTest extends TestCase{
 		String[] args = new String[1];
 		args[0] = "text/testing.java";
 		CloneDetector.main(args);
-		assertTrue(outContent.toString().contains("(text/testing.java)1-4:(text/testing.java)5-8"));
+		assertTrue(outContent.toString().contains("1-4:5-8"));
 	}
 	
 	@Test
@@ -95,9 +97,9 @@ public class CloneDetectorTest extends TestCase{
 		//Test for correct clone detection in multiple java files
 		String[] args = new String[2];
 		args[0] = "text/testing.java";
-		args[1] = "text/testing.java";
+		args[1] = "text/testing2.java";
 		CloneDetector.main(args);
-		assertTrue(outContent.toString().contains("(text/testing.java)1-9:(text/testing.java)1-9"));
+		assertTrue(outContent.toString().contains("(text/testing.java)1-9:(text/testing2.java)1-9"));
 	}
 	
 	@Test
@@ -105,7 +107,7 @@ public class CloneDetectorTest extends TestCase{
 		//Test that CloneManager is correctly returned
 		CloneDetector cd = new CloneDetector();
 		Index i = new Index();
-		assertEquals(cd.findClones(i).toString(), new CloneManager(2).toString());
+		assertEquals(cd.findClones(i).toString(), new CloneManager().toString());
 		
 	}
 	

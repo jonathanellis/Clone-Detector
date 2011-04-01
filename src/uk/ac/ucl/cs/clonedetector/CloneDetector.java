@@ -94,7 +94,7 @@ public class CloneDetector {
 				System.err.println("An error occurred whilst reading the file.");
 			}
 		}
-		CloneManager clones = findClones(index);
+		CloneManager clones = findClones(index); 
 		System.out.println(clones);
 	}
 
