@@ -17,8 +17,7 @@ public class CloneDetector {
 	 * Retrieves the file extension from a given relative or absolute filename.
 	 * Filenames with no extension return "".
 	 * 
-	 * @param filename
-	 *            Filename to get the extension for
+	 * @param filename Filename to get the extension for
 	 * @return Extension for the filename
 	 */
 	public static String getExtension(String filename) {
@@ -28,12 +27,19 @@ public class CloneDetector {
 		return "";
 	}
 	
+	/**
+	 * Finds clones from the specified index (which encapsulates both the forward
+	 * and inverted index).
+	 * @param index The Index class to find clones from.
+	 * @return
+	 */
 	public CloneManager findClones(Index index) {
 	
 		CloneManager cloneManager = new CloneManager();
 		
+		// Iterate over the index
 		for (BigInteger fingerprint : index) {
-			ArrayList<Reference> postings = index.lookup(fingerprint);
+			ArrayList<Reference> postings = index.lookup(fingerprint); // Fetch the postings list
 			if (postings.size() > 1) {
 				for (Reference iStart : postings) {
 					for (Reference jStart : postings) {

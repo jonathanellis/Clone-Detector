@@ -41,9 +41,11 @@ public class Clone implements Comparable<Clone> {
 	}
 	
 
-	
 	public String toString() {
-		return String.format("(%s)%d-%d:(%s)%d-%d", this.iStart.getFilename(), this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getFilename(), this.jStart.getLine(), this.jEnd.getLine());
+		if (CloneDetector.options.getFilenames().size() > 1) // if more than 1 filename, output filenames too
+			return String.format("(%s)%d-%d:(%s)%d-%d", this.iStart.getFilename(), this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getFilename(), this.jStart.getLine(), this.jEnd.getLine());
+		else // otherwise, just output line numbers
+			return String.format("%d-%d:%d-%d", this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getLine(), this.jEnd.getLine());
 	}
 	
 	public Reference getIStart() {
@@ -79,6 +81,7 @@ public class Clone implements Comparable<Clone> {
 	}
 	
 	public boolean overlapsItself() {
+		if (!iStart.getFilename().equals(jStart.getFilename())) return false;
 		return (jStart.getLine() <= iEnd.getLine() && jEnd.getLine() >= iEnd.getLine() ||
 				iStart.getLine() <= jEnd.getLine() && iEnd.getLine() >= jEnd.getLine());
 	}
