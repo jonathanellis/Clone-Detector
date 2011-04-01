@@ -40,20 +40,25 @@ public Reference r;
 	
 	@Test
 	public void test_computeFingerprint() throws NoSuchAlgorithmException {
+		//test that an empty line returns ZERO
 		assertEquals(Index.computeFingerprint("", "MD5"), BigInteger.ZERO);
 		
+		//test that the expected fingerprint is returned for hashcode
 		assertEquals(Index.computeFingerprint("thisisaline", "StringHashCode"), BigInteger.valueOf("thisisaline".hashCode()));
 		
+		//test that the expected fingerprint is returned for md5
 		MessageDigest m = MessageDigest.getInstance("MD5");
 		m.update("thisisaline".getBytes(), 0, "thisisaline".length());
 		BigInteger fingerprint = new BigInteger(1, m.digest());
 		
 		assertEquals(Index.computeFingerprint("thisisaline", "MD5"), fingerprint);
 	}
-	
+
 	@Test
 	public void test_lookup(){
+		//test that lookup returns the correct fingerprint based on the reference entered
 		assertEquals(i.lookup(r), BigInteger.ONE);
+		//test that lookup returns the correct reference based on the fingerprint entered
 		assertEquals(i.lookup(BigInteger.TEN), new ArrayList<Reference>());
 		assertEquals(i.lookup(BigInteger.ONE).get(0), r );
 	}

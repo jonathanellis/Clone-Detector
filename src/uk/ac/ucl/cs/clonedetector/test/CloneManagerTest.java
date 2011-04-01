@@ -33,22 +33,23 @@ public class CloneManagerTest extends TestCase {
 		r3 = new Reference("filename", 11);
 		r4 = new Reference("filename", 15);
 		cl = new Clone(r1,r2,r3,r4);
-		
 	}
 
 	@After
-	public void tearDown() throws Exception {
-	
-	}
+	public void tearDown() throws Exception {}
 	
 	@Test
 	public void test_coalesce() {
 		
+		//set-up file number
 		String[] args = new String[1];
 		args[0] = "filename";
 		CloneDetector.options = new Options(args);
+		
+		//add first clone to cloneManager
 		c.add(cl);
 		
+		//add expected clone to test list
 		ArrayList<Clone> list = new ArrayList<Clone>();
 		list.add(cl);
 		
@@ -69,9 +70,10 @@ public class CloneManagerTest extends TestCase {
 		list.clear();
 		list.add(cl);
 		
-		//Test that only the encompassing clone is output
+		//Test that only the encompassing clone is output from coalescing
 		assertEquals(c.coalesce().toString(),list.toString());
 		
+		//create new clone that does not overlap with either of the other 2
 		Reference re5 = new Reference("filename", 99);
 		Reference re6 = new Reference("filename", 101);
 		Reference re7 = new Reference("filename", 104);
@@ -88,15 +90,19 @@ public class CloneManagerTest extends TestCase {
 	
 	@Test
 	public void test_Add_and_toString() {
+		//set up file numbers
 		String[] args = new String[1];
 		args[0] = "filename";
 		CloneDetector.options = new Options(args);
+		
+		//add first clone to clone manager
 		c.add(cl);
 		
+		//add expected clone to test list
 		ArrayList<Clone> list = new ArrayList<Clone>();
 		list.add(cl);
 		
-		//Test that one clone output correctly
+		//Test that one clone output to string correctly
 		assertEquals(c.toString(),cl.toString());
 		
 		list.add(cl);

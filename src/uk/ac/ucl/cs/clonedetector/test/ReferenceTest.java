@@ -42,7 +42,7 @@ public Reference r4;
 		assertEquals(r.getFilename(), "filename");
 	}
 	
-	@Test
+	@Test 
 	public void test_getLine(){
 		//Test that correct line is returned
 		assertEquals(r.getLine(), 14);
@@ -50,12 +50,13 @@ public Reference r4;
 	
 	@Test
 	public void test_next(){
-		
+		//test that the correct successor is returned by next()
 		assertEquals(r4.next(), r);
 	}
 	
 	@Test
 	public void test_setNext(){
+		//test that the sucessor reference is correctly set by setNext()
 		r4.setNext(r2);
 		assertEquals(r4.next(), r2);
 	}
@@ -77,7 +78,7 @@ public Reference r4;
 
 	@Test
 	public void test_toString(){
-		//Test that reference is correctly output to string
+		//Test that references are correctly output to string
 		assertEquals(r.toString(), "(filename)" + 14 );
 		assertEquals(r2.toString(), "(filenames)" + 124 );
 		assertEquals(r3.toString(), "(filenamess)" + 4 );
