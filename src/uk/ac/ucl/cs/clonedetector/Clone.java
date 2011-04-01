@@ -6,12 +6,30 @@ package uk.ac.ucl.cs.clonedetector;
 /**
  * <code>Clone</code> stores information about clones (starting position, and
  * the length of the clone).
+ * 
+ * @author apollo
+ * @version 1.0
  */
 public class Clone implements Comparable<Clone> {
 
+	/**
+	 *  start of the first block that collides
+	 */
 	private Reference iStart;
+	
+	/**
+	 * end of the first block that collides
+	 */
 	private Reference iEnd;
+	
+	/**
+	 * start of the second block that collides
+	 */
 	private Reference jStart;
+	
+	/**
+	 * end of the second block that collides
+	 */
 	private Reference jEnd;
 
 	/**
@@ -19,10 +37,12 @@ public class Clone implements Comparable<Clone> {
 	 * 
 	 * @param iStart
 	 *            start of the first block that collides
+	 * @param iEnd
+	 * 			  end of the first block that collides
 	 * @param jStart
 	 *            start of the second block that collides
-	 * @param length
-	 *            length is the length of the collision
+	 * @param jEnd
+	 *            end of the second block that collides
 	 */
 	public Clone(Reference iStart, Reference iEnd, Reference jStart, Reference jEnd) {
 		if (iStart.getLine() > jStart.getLine()) {
@@ -40,18 +60,20 @@ public class Clone implements Comparable<Clone> {
 		this.jEnd = jEnd;
 	}
 	
-
-	public String toString() {
-		if (CloneDetector.options.getFilenames().size() > 1) // if more than 1 filename, output filenames too
-			return String.format("(%s)%d-%d:(%s)%d-%d", this.iStart.getFilename(), this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getFilename(), this.jStart.getLine(), this.jEnd.getLine());
-		else // otherwise, just output line numbers
-			return String.format("%d-%d:%d-%d", this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getLine(), this.jEnd.getLine());
-	}
-	
+	/**
+	 * Get start of first block that collides
+	 * 
+	 * @return iStart
+	 */
 	public Reference getIStart() {
 		return iStart;
 	}
 	
+	/**
+	 * Get the length of collision
+	 * 
+	 * @return length
+	 */
 	public int getLength() {
 		return (iEnd.getLine() - iStart.getLine()) + 1;
 	}
@@ -89,7 +111,16 @@ public class Clone implements Comparable<Clone> {
 				iStart.getLine() <= jEnd.getLine() && iEnd.getLine() >= jEnd.getLine());
 	}
 	
+	@Override
 	public int compareTo(Clone other) {
 		return iStart.compareTo(other.iStart);
+	}
+
+	@Override
+	public String toString() {
+		if (CloneDetector.options.getFilenames().size() > 1) // if more than 1 filename, output filenames too
+			return String.format("(%s)%d-%d:(%s)%d-%d", this.iStart.getFilename(), this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getFilename(), this.jStart.getLine(), this.jEnd.getLine());
+		else // otherwise, just output line numbers
+			return String.format("%d-%d:%d-%d", this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getLine(), this.jEnd.getLine());
 	}
 }

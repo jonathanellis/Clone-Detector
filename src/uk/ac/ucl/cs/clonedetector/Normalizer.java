@@ -8,7 +8,12 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Class description
+ * <code>Normalizer</code> normalizes string according to the language of the file. If 
+ * the file in question is a programming language, <code>Normalizer</code> uses the keywords
+ * from that programming language (if the language has been specified). 
+ * 
+ * @author apollo
+ * @version 1.0
  */
 public class Normalizer {
 
@@ -27,6 +32,7 @@ public class Normalizer {
 	/**
 	 * Constructs a <code>Normalizer</code> using the passed parameter as the language
 	 * under which to perform the normalization. 
+	 * 
 	 * @param lang
 	 */
 	public Normalizer(String lang) {

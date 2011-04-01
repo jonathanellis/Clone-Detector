@@ -1,20 +1,28 @@
 /**
  * Copyright (c) 2011 Team Apollo
  */
-
 package uk.ac.ucl.cs.clonedetector;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+/**
+ * <code>CloneDetector</code> provides major functionality, which  essentially 
+ * powers the program as a whole.
+ * 
+ * @author apollo
+ * @version 1.0
+ */
 public class CloneDetector {
 	
+	/**
+	 * flags supported by the program;
+	 * -a for choosing the algorithm
+	 * -l for setting the minimum size of clone
+	 */
 	public static Options options;
 
 	/**
@@ -35,7 +43,8 @@ public class CloneDetector {
 	 * Finds clones from the specified index (which encapsulates both the forward
 	 * and inverted index).
 	 * @param index The Index class to find clones from.
-	 * @return
+	 * 
+	 * @return clones
 	 */
 	public CloneManager findClones(Index index) {
 	
