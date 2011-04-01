@@ -11,6 +11,11 @@ public class CloneManager {
 		clones.add(c);
 	}
 	
+	/**
+	 * Coalesces clones by created a list of "good" clones that do not encompass each
+	 * other or overlap.
+	 * @return A list of "good" clones.
+	 */
 	public ArrayList<Clone> coalesce() {
 		ArrayList<Clone> goodClones = new ArrayList<Clone>();
 
@@ -49,7 +54,7 @@ public class CloneManager {
 	
 	@Override
 	public String toString() {
-		Collections.sort(clones);
+		Collections.sort(clones); // Sort the clones
 		String result = "";
 		for (Clone c : coalesce()) {
 			if (c.getLength() >= CloneDetector.options.getCloneMinLength()) result += c.toString() + "\n";

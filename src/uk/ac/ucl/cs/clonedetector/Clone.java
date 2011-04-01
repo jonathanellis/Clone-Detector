@@ -80,6 +80,9 @@ public class Clone implements Comparable<Clone> {
 		return false;
 	}
 	
+	/**
+	 * Determines whether the current clone overlaps itself.
+	 */
 	public boolean overlapsItself() {
 		if (!iStart.getFilename().equals(jStart.getFilename())) return false;
 		return (jStart.getLine() <= iEnd.getLine() && jEnd.getLine() >= iEnd.getLine() ||
