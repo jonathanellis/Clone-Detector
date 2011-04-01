@@ -51,7 +51,7 @@ public class CloneTest extends TestCase {
 		args[0] = "filename";
 		CloneDetector.options = new Options(args);
 		
-		//Test clones are output correctly
+		//Test both clones are output correctly
 		String output = "14-15:16-17";
 		assertEquals(c.toString(), output);
 		

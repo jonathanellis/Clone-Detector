@@ -29,7 +29,7 @@ Normalizer normnolang;
 	@Test
 	public void test_normalize()  {
 		
-		//Test cases for var replacement
+		//Test cases for var and num replacement
 		assertEquals(normlang.normalize("int foo = 4"), "int%var%=%num%");
 		assertEquals(normlang.normalize("double foo = 12.3"), "double%var%=%num%");
 		assertEquals(normlang.normalize("float foo = 12.3"), "float%var%=%num%");

@@ -28,7 +28,7 @@ public class CloneDetectorTest extends TestCase{
 		System.setErr(new PrintStream(errContent));
 	}
 
-	@After
+	@After 
 	public void tearDown() throws Exception {
 		//Reset fixtures
 		System.setOut(null);
@@ -74,7 +74,7 @@ public class CloneDetectorTest extends TestCase{
 	
 	@Test
 	public void test_findClonesAlgotrithmNotFound() throws IOException, NoSuchAlgorithmException {
-		//Test that the correct exception is thrown, and the correct message given to the user when a file does not exist
+		//Test that the correct exception is thrown, and the correct message given to the user when an absurd algorithm is entered
 		String[] args = new String[3];
 		args[0] = "text/testing.java";
 		args[1] = "-a";
