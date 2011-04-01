@@ -136,6 +136,8 @@ public class CloneDetector {
 		CloneDetector cd = new CloneDetector();
 		if (args.length < 1) {
 			System.out.println("USAGE: java -jar clone.java <filename(s)>");
+			
+					
 		} else {
 			cd.findClones("StringHashCode", args);
 		}
