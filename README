@@ -1,0 +1,22 @@
+[AUTHORS]
+1.	THOMAS DAVIES
+2.	JONATHAN ELLIS
+3.	RAUNAK GUPTA
+4.	MARK LLEWELYN
+
+[COMPILE]
+1. 	run 'ant' on root directory from terminal.
+	This compiles the program, creates the javadoc, executes jUnit tests, and 
+	outputs a clone.jar file in dist/lib directory 
+
+[RUN]
+java -jar dist/lib/clone.jar <filename>
+
+The following commands can be specified:
+
+-a	specify the algorithm to use. By default clone.jar uses 'StringHashCode'
+	Other algorithms that can be used are SHA-1, MD-5, and anything that 
+	is available in the standard java library.
+	
+-l	specify the minimum clone length. By default clone.jar finds clones whose 
+	length are greater or equal to 2.
