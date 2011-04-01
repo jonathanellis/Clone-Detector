@@ -43,9 +43,6 @@ public class Clone implements Comparable<Clone> {
 
 	
 	public String toString() {
-		String iFilename = iStart.getFilename();
-		String jFilename = jStart.getFilename();
-
 		return String.format("(%s)%d-%d:(%s)%d-%d", this.iStart.getFilename(), this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getFilename(), this.jStart.getLine(), this.jEnd.getLine());
 	}
 	
@@ -54,7 +51,7 @@ public class Clone implements Comparable<Clone> {
 	}
 	
 	public int getLength() {
-		return iEnd.getLine() - iStart.getLine();
+		return (iEnd.getLine() - iStart.getLine()) + 1;
 	}
 	
 	/**

@@ -5,11 +5,7 @@ import java.util.Collections;
 
 public class CloneManager {
 	private ArrayList<Clone> clones = new ArrayList<Clone>();
-	private int minCloneLength = 2;
-	
-	public CloneManager(int minCloneLength) {
-		this.minCloneLength = minCloneLength;
-	}
+
 	
 	public void add(Clone c) {
 		clones.add(c);
@@ -44,7 +40,7 @@ public class CloneManager {
 		Collections.sort(clones);
 		String result = "";
 		for (Clone c : coalesce()) {
-			if (c.getLength() >= this.minCloneLength) result += c.toString() + "\n";
+			if (c.getLength() >= CloneDetector.options.cloneMinLength) result += c.toString() + "\n";
 		}
 		return result.trim();
 	}

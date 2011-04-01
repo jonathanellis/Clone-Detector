@@ -10,6 +10,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class CloneDetector {
+	
+	public static Options options;
 
 	/**
 	 * Retrieves the file extension from a given relative or absolute filename.
@@ -28,7 +30,7 @@ public class CloneDetector {
 	
 	public CloneManager findClones(Index index) {
 	
-		CloneManager cloneManager = new CloneManager(2);
+		CloneManager cloneManager = new CloneManager();
 		
 		for (BigInteger fingerprint : index) {
 			ArrayList<Reference> postings = index.lookup(fingerprint);
@@ -72,12 +74,12 @@ public class CloneDetector {
 	/*
 	 * Handles all the output:
 	 */
-	public void findClones(String algorithm, String[] filenames) {
+	public void findClones() {
 		Index index = new Index();
 		
-		for (int i = 0; i < filenames.length; i++) {
+		for (String filename: options.filenames) {
 			try {				
-				index.updateIndex(filenames[i], algorithm);
+				index.updateIndex(filename, options.algorithm);
 			} catch (FileNotFoundException e) {
 				System.err.println("File not found!");
 			} catch (NoSuchAlgorithmException e) {
@@ -93,11 +95,10 @@ public class CloneDetector {
 	public static void main(String[] args) {
 		CloneDetector cd = new CloneDetector();
 		if (args.length < 1) {
-			System.out.println("USAGE: java -jar clone.java <filename(s)>");
-			
-					
+			System.out.println("USAGE: java -jar clone.java <filename(s)>");		
 		} else {
-			cd.findClones("StringHashCode", args);
+			options = new Options(args);
+			cd.findClones();
 		}
 	}
 }
