@@ -11,71 +11,6 @@ import java.util.ArrayList;
 
 public class CloneDetector {
 
-
-	/**
-	 * Find clones in the given filename using the specified algorithm.
-	 * 
-	 * @param filename
-	 * @param algorithm
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws NoSuchAlgorithmException
-	 *             Thrown if the algorithm is not available on the system.
-	 */
-	public CloneManager findClones(Index index, String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
-		CloneManager cloneManager = new CloneManager();
-		Normalizer normalizer = new Normalizer(getExtension(filename));
-		String line;
-		Reference iCurrent = new Reference(filename, 1);
-
-		Reference iStart = null;
-		Reference iEnd = null;
-		Reference jStart = null;
-		Reference jEnd = null;
-		
-		Reference jPrev = null;
-		
-		BufferedReader in = new BufferedReader(new FileReader(filename));
-
-		while ((line = in.readLine()) != null) {
-			
-			String normalizedLine = normalizer.normalize(line);
-			BigInteger fingerprint = computeFingerprint(normalizedLine, algorithm);
-
-			ArrayList<Reference> matchingLines = index.lookup(fingerprint);
-
-			// Start of a new match:
-			if (matchingLines.size() > 0 && iStart == null) {
-				Reference firstMatch = matchingLines.get(0);
-				jPrev = firstMatch.clone();
-				
-				iStart = iCurrent.clone();
-				iEnd = iStart.clone();
-				jStart = firstMatch.clone();
-				jEnd = jStart.clone();
-			} else if (iStart != null) {
-				if (matchingLines.contains(jPrev.successor())) { // continue match
-					iEnd.incLine();
-					jEnd.incLine();
-					jPrev.incLine();
-				} else { // end match
-					cloneManager.add(iStart, iEnd, jStart, jEnd);
-					iStart = null;
-					iEnd = null;
-					jStart = null;
-					jEnd = null;
-					jPrev = null;
-				}
-			}
-
-
-			index.updateIndex(fingerprint, iCurrent.clone());
-			iCurrent.incLine();
-		}
-		return cloneManager;
-	}
-
 	/**
 	 * Retrieves the file extension from a given relative or absolute filename.
 	 * Filenames with no extension return "".
@@ -90,25 +25,50 @@ public class CloneDetector {
 			return chunks[chunks.length - 1];
 		return "";
 	}
-
-	public static BigInteger computeFingerprint(String line, String algorithm) throws NoSuchAlgorithmException {
-
-		if (algorithm.equals("StringHashCode"))
-			return BigInteger.valueOf(line.hashCode());
-
-		/*
-		 * Else hand over to MessageDigest:
-		 */
-
-		if (line.equals("")) return BigInteger.ZERO;
-
-		MessageDigest m = MessageDigest.getInstance(algorithm);
-		m.update(line.getBytes(), 0, line.length());
-		BigInteger fingerprint = new BigInteger(1, m.digest());
-		return fingerprint;
+	
+	public CloneManager findClones(Index index) {
+	
+		CloneManager cloneManager = new CloneManager();
+		
+		for (BigInteger fingerprint : index) {
+			ArrayList<Reference> postings = index.lookup(fingerprint);
+			if (postings.size() > 1) {
+				for (Reference iStart : postings) {
+					for (Reference jStart : postings) {
+						if (iStart != jStart) {
+							Reference iEnd = iStart.clone();
+							Reference jEnd = jStart.clone();
+							Reference i = iStart.clone();
+							Reference j = jStart.clone();
+							boolean matching = true;
+							
+							while (matching) {
+								// This is the start of a clone
+								Reference iNext = i.next();
+								Reference jNext = j.next();
+							
+								BigInteger iNextFingerprint = index.lookup(iNext);
+								
+								ArrayList<Reference> iNextPostings = index.lookup(iNextFingerprint);
+								if (iNextPostings.contains(jNext)) {
+									i = iNext;
+									j = jNext;
+									iEnd.incLine();
+									jEnd.incLine();
+								} else {
+									matching = false;
+								}
+							}
+							Clone c = new Clone(iStart, iEnd, jStart, jEnd);
+							cloneManager.add(c);
+						}
+					}
+				}
+			}
+		}
+		return cloneManager;
 	}
 
-	
 	/*
 	 * Handles all the output:
 	 */
@@ -118,8 +78,9 @@ public class CloneDetector {
 		for (int i = 0; i < filenames.length; i++) {
 			try {
 				System.out.println(filenames[i] + ":");
-				CloneManager clones = findClones(index, filenames[i], algorithm);
-				System.out.println(clones);
+				
+				index.updateIndex(filenames[i], algorithm);
+				
 				if (filenames.length > 1 && i < filenames.length - 1) // if it's the final line
 					System.out.println("");
 			} catch (FileNotFoundException e) {
@@ -130,6 +91,8 @@ public class CloneDetector {
 				System.err.println("An error occurred whilst reading the file.");
 			}
 		}
+		CloneManager clones = findClones(index);
+		System.out.println(clones);
 	}
 
 	public static void main(String[] args) {

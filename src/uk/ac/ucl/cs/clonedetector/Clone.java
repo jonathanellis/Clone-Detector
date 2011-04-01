@@ -40,6 +40,8 @@ public class Clone implements Comparable<Clone> {
 		this.jEnd = jEnd;
 	}
 	
+
+	
 	public String toString() {
 		String iFilename = iStart.getFilename();
 		String jFilename = jStart.getFilename();

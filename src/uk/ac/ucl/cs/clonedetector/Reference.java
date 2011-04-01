@@ -3,10 +3,17 @@ package uk.ac.ucl.cs.clonedetector;
 public class Reference implements Cloneable, Comparable<Reference> {
 	private String filename;
 	private int line;
+	private Reference next;
 	
 	public Reference(String filename, int line) {
 		this.filename = filename;
 		this.line = line;
+	}
+	
+	public Reference(String filename, int line, Reference next) {
+		this.filename = filename;
+		this.line = line;
+		this.next = next;
 	}
 	
 	public String getFilename() {
@@ -17,17 +24,22 @@ public class Reference implements Cloneable, Comparable<Reference> {
 		return line;
 	}
 	
+	public Reference next() {
+		return next;
+	}
+	
+	public void setNext(Reference next) {
+		this.next = next;
+	}
+	
 	public void incLine() {
 		line++;
 	}
 	
-	public Reference successor() {
-		return new Reference(filename, line+1);
-	}
-	
+
 	@Override
 	public Reference clone() {
-		return new Reference(filename, line);
+		return new Reference(filename, line, next);
 	}
 	
 	@Override
