@@ -28,7 +28,7 @@ public class CloneDetector {
 	
 	public CloneManager findClones(Index index) {
 	
-		CloneManager cloneManager = new CloneManager();
+		CloneManager cloneManager = new CloneManager(2);
 		
 		for (BigInteger fingerprint : index) {
 			ArrayList<Reference> postings = index.lookup(fingerprint);
@@ -76,13 +76,8 @@ public class CloneDetector {
 		Index index = new Index();
 		
 		for (int i = 0; i < filenames.length; i++) {
-			try {
-				System.out.println(filenames[i] + ":");
-				
+			try {				
 				index.updateIndex(filenames[i], algorithm);
-				
-				if (filenames.length > 1 && i < filenames.length - 1) // if it's the final line
-					System.out.println("");
 			} catch (FileNotFoundException e) {
 				System.err.println("File not found!");
 			} catch (NoSuchAlgorithmException e) {

@@ -45,9 +45,7 @@ public class Clone implements Comparable<Clone> {
 	public String toString() {
 		String iFilename = iStart.getFilename();
 		String jFilename = jStart.getFilename();
-		if (iFilename.equals(jFilename)) {
-			return String.format("%d-%d:%d-%d", this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getLine(), this.jEnd.getLine());			
-		}
+
 		return String.format("(%s)%d-%d:(%s)%d-%d", this.iStart.getFilename(), this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getFilename(), this.jStart.getLine(), this.jEnd.getLine());
 	}
 	
@@ -57,6 +55,30 @@ public class Clone implements Comparable<Clone> {
 	
 	public int getLength() {
 		return iEnd.getLine() - iStart.getLine();
+	}
+	
+	/**
+	 * Determines whether this clone encompasses another clone. There are two types of encompassing,
+	 * internal and external:
+	 * 
+	 * If there are two clones A:B and a:b then A:B <bold>externally</bold> encompasses
+	 * a:b if a is a subset of A and b is a subset of B.
+	 * 
+	 * If there are two clones A:B and a:b then A:B <bold>internally</bold> encompasses
+	 * a:b if (a and b are subsets of A) or (a and b are subsets of B).
+	 * 
+	 * @param other The clone to comare with.
+	 * @return True if this clone encompasses other, else false.
+	 */
+	public boolean encompasses(Clone other) {
+		if (this.iStart.getFilename().equals(other.iStart.getFilename())) {
+			boolean external = (this.iStart.getLine() <= other.iStart.getLine() && this.iEnd.getLine() >= other.iEnd.getLine() && this.jStart.getLine() <= other.jStart.getLine() && this.jEnd.getLine() >= other.jEnd.getLine());	
+			boolean internal = (this.iStart.getLine() <= other.iStart.getLine() && this.iEnd.getLine() > other.iEnd.getLine() && this.iStart.getLine() <= other.jStart.getLine() && this.iEnd.getLine() > other.jEnd.getLine() ||
+					this.jStart.getLine() <= other.iStart.getLine() && this.jEnd.getLine() > other.iEnd.getLine() && this.jStart.getLine() <= other.jStart.getLine() && this.jEnd.getLine() > other.jEnd.getLine());	
+			
+			return (external || internal);
+		}
+		return false;
 	}
 	
 	public int compareTo(Clone other) {
