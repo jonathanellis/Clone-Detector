@@ -1,8 +1,5 @@
 package uk.ac.ucl.cs.clonedetector.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
@@ -40,6 +37,7 @@ public class CloneManagerTest extends TestCase {
 		r4 = new Reference("filename", 23);
 		r5 = new Reference("filename", 13);
 		r6 = new Reference("filename",14);
+		
 		r7 = new Reference("filename", 40);
 		r8 = new Reference("filename", 43);
 		r9 = new Reference("filename", 43);
@@ -49,47 +47,54 @@ public class CloneManagerTest extends TestCase {
 
 	@After
 	public void tearDown() throws Exception {
+		
+		
 	}
-	
 	
 	@Test
 	public void test_coalesce() {
-		//Test that clone list is returned
+		
+		//Test that a n empty clone list is returned when no clones are present
 		ArrayList<Clone> list = new ArrayList<Clone>();
 		assertEquals(c.coalesce().toString(), list.toString());
 		
-		//Test that clones are added to the list and returned
+		//Test that clones are added to the list and returned correctly
 		c.add(cl);
 		list.add(cl);
-		assertEquals(c.coalesce().toString(),list.toString() );
+		assertEquals(c.coalesce().toString(),list.toString());
 		
-		//Test coalescing of encompassing clones
+		//Test that coalescing of encompassing clones works correctly
 		list.clear();
 		
+		//Overlapping clones 12-15 & 13-14
 		Clone c1 = new Clone(r,r2,r3,r4);
 		Clone c2 = new Clone(r5,r6,r3,r4);
 		
+		//Only add outer clone to test list and add both to CloneManager
 		c.add(c1);
 		list.add(c1);
 		c.add(c2);
 		
-		assertEquals(c.coalesce().toString(),list.toString() );
+		//if equal then coalescing has worked correctly
+		assertEquals(c.coalesce().toString(),list.toString());
 	}
 	
 	@Test
 	public void test_Add_and_toString() {
 		//Test an empty clone manager returns nothing
 		assertEquals(c.toString(), "");
-		
-		
+
 		//Test Add and toString
 		c.add(cl);
 		assertEquals(c.toString(), cl.toString());
 		
 		//Test add and toSTring for two no overlapping clones
+		
+		//A clone that does not overlap with cl 12-15 & 40-43
 		Clone c2 = new Clone(r7,r8,r9,r10);
 		c.add(c2);
 		
+		//Should return both clones separated by newline because they don't overlap
 		assertEquals(c.toString(), cl.toString()+"\n"+c2.toString());
 	}
 	
@@ -97,7 +102,5 @@ public class CloneManagerTest extends TestCase {
 		TestSuite suite = new TestSuite(CloneManagerTest.class);
 		return suite;
 	}
-	
 
-	
 }
