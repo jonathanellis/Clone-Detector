@@ -28,14 +28,14 @@ Normalizer normnolang;
 	public void test_normalize()  {
 		
 		//Test cases for var replacement
-		assertEquals(normlang.normalize("int foo = 4"), "int%var%=4");
-		assertEquals(normlang.normalize("double foo = 12.3"), "double%var%=12.3");
-		assertEquals(normlang.normalize("float foo = 12.3"), "float%var%=12.3");
-		assertEquals(normlang.normalize("byte foo = 4"), "byte%var%=4");
+		assertEquals(normlang.normalize("int foo = 4"), "int%var%=%num%");
+		assertEquals(normlang.normalize("double foo = 12.3"), "double%var%=%num%");
+		assertEquals(normlang.normalize("float foo = 12.3"), "float%var%=%num%");
+		assertEquals(normlang.normalize("byte foo = 4"), "byte%var%=%num%");
 		assertEquals(normlang.normalize("char foo = \"c\""), "char%var%=%str%");
 		
 		//Test case with added keywords
-		assertEquals(normlang.normalize("public static int foo = 4"), "publicstaticint%var%=4");
+		assertEquals(normlang.normalize("public static int foo = 4"), "publicstaticint%var%=%num%");
 		
 		//Test cases for no lang normalization
 		assertEquals(normnolang.normalize("int foo = 4"), "intfoo=4");
