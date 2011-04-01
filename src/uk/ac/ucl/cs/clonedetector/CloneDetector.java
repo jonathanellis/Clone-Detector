@@ -9,8 +9,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import uk.ac.ucl.cs.clonedetector.Index.CDoc;
-
 public class CloneDetector {
 
 	private Index index = new Index();
@@ -43,11 +41,11 @@ public class CloneDetector {
 			String normalizedLine = normalizer.normalize(line);
 			BigInteger fingerprint = computeFingerprint(normalizedLine, algorithm);
 
-			ArrayList<CDoc> matchingLines = index.linesWithFingerprint(fingerprint);
+			ArrayList<Integer> matchingLines = index.linesWithFingerprint(fingerprint);
 
 			// Start of a new match:
 			if (matchingLines.size() > 0 && matchLength == -1) {
-				int earliestMatch = matchingLines.get(0).getLineNumber();
+				int earliestMatch = matchingLines.get(0);
 				prevMatchingLine = earliestMatch;
 				iStart = lineNum;
 				jStart = earliestMatch;
@@ -64,7 +62,7 @@ public class CloneDetector {
 				}
 			}
 
-			index.updateIndex(fingerprint, filename, lineNum);
+			index.updateIndex(fingerprint, lineNum);
 			lineNum++;
 		}
 		return cloneManager;
