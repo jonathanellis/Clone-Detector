@@ -6,8 +6,9 @@ import java.util.HashMap;
 
 public class Index {
 	
+	private ArrayList<String> filenames = new ArrayList<String>();
 	private HashMap<BigInteger, ArrayList<CDoc>> index = new HashMap<BigInteger, ArrayList<CDoc>>();
-
+	
 	public void updateIndex(BigInteger fingerprint, String fileName, int lineNumber) {
 		if (fingerprint == BigInteger.ZERO)
 			return;
