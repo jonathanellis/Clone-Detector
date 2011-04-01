@@ -9,6 +9,8 @@ public class AllTests  extends TestCase {
 	
 	public static TestSuite suite;
 	
+	//Collates the individual test suites into one, so that they can be run together
+	
 	public static Test suite(){
 		suite = new TestSuite();
 		suite.addTest(CloneDetectorTest.suite());
@@ -21,6 +23,7 @@ public class AllTests  extends TestCase {
 		return suite;
 	}
 
+	//Main method to make it runnable from the command line and the JUINT interface
 	public static void main(String[] args){
 		TestResult t = null;
 		suite.run(t);

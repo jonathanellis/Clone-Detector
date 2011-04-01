@@ -31,7 +31,7 @@ public class CloneTest extends TestCase {
 	public void setUp() throws Exception {
 		r = new Reference("filename", 14);
 		r2 = new Reference("filename", 15);
-		r3 = new Reference("filename", 16);
+		r3 = new Reference("filename", 16); 
 		r4 = new Reference("filename", 17);
 		c = new Clone(r,r2,r3,r4);
 		c2 = new Clone(r3,r4,r,r2);
@@ -46,6 +46,7 @@ public class CloneTest extends TestCase {
 	
 	@Test
 	public void test_toString() {
+		//Set up options so that we know there is only one file to check
 		String[] args = new String[1];
 		args[0] = "filename";
 		CloneDetector.options = new Options(args);
@@ -74,7 +75,7 @@ public class CloneTest extends TestCase {
 	
 	@Test
 	public void test_encompasses() {
-		//New fixture for encompass tests
+		//New fixtures for encompass tests
 		Reference re = new Reference("filename", 26);
 		Reference re2 =new Reference("filename", 28);
 		Reference re3 =new Reference("filename", 29);

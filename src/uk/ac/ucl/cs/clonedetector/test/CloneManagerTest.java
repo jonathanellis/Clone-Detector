@@ -55,16 +55,17 @@ public class CloneManagerTest extends TestCase {
 		//Test that one clone is not coalesced and output correctly
 		assertEquals(c.coalesce().toString(),list.toString());
 		
-		
+		//Creating a new clone that is inside cl clone
 		Reference re1 = new Reference("filename", 2);
 		Reference re2 = new Reference("filename", 4);
 		Reference re3 = new Reference("filename", 12);
 		Reference re4 = new Reference("filename", 14);
 		Clone cl2 = new Clone(re1,re2,re3,re4);	
 		
-		
+		//c now contains both clones
 		c.add(cl2);
 		
+		//Test list only containing the clone we expect to be output
 		list.clear();
 		list.add(cl);
 		
@@ -77,6 +78,7 @@ public class CloneManagerTest extends TestCase {
 		Reference re8 = new Reference("filename", 106);
 		Clone cl3 = new Clone(re5,re6,re7,re8);
 		
+		//add a third clone that does not overlap with either of the other 2
 		c.add(cl3);
 		
 		//Test that the non-overlapping clone is output correctly when 3 clones are present
