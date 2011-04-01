@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.security.NoSuchAlgorithmException;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +15,7 @@ import org.junit.Test;
 import uk.ac.ucl.cs.clonedetector.Clone;
 import uk.ac.ucl.cs.clonedetector.Reference;
 
-public class CloneTest {
+public class CloneTest extends TestCase {
 
 	public Clone c;
 	public Clone c2;
@@ -59,6 +62,10 @@ public class CloneTest {
 		assertTrue(c3.compareTo(c) > 0);
 	}
 	
+	public static TestSuite suite() {
+		TestSuite suite = new TestSuite(CloneTest.class);
+		return  suite;
+	}
 
 	
 }

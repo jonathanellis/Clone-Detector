@@ -2,6 +2,8 @@ package uk.ac.ucl.cs.clonedetector.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,7 +13,7 @@ import uk.ac.ucl.cs.clonedetector.CloneManager;
 import uk.ac.ucl.cs.clonedetector.Reference;
 import uk.ac.ucl.cs.clonedetector.Clone;
 
-public class CloneManagerTest {
+public class CloneManagerTest extends TestCase {
 
 	public CloneManager c;
 	public Reference r;
@@ -59,7 +61,10 @@ public class CloneManagerTest {
 		assertEquals(c.toString(), output);
 	}
 	
-	
+	public static TestSuite suite() {
+		TestSuite suite = new TestSuite(CloneManagerTest.class);
+		return suite;
+	}
 	
 
 	

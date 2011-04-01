@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +18,7 @@ import org.junit.Test;
 import uk.ac.ucl.cs.clonedetector.Index;
 import uk.ac.ucl.cs.clonedetector.Reference;
 
-public class IndexTest {
+public class IndexTest extends TestCase {
 public Reference r;
 public Index i;
 public Index i2;
@@ -45,6 +48,9 @@ public Index i2;
 		assertEquals(i2.lookup(BigInteger.ZERO), new ArrayList<Reference>());
 	}
 	
-
+public static TestSuite suite() {
+	TestSuite suite = new TestSuite(IndexTest.class);
+	return (TestSuite) suite;
+}
 	
 }

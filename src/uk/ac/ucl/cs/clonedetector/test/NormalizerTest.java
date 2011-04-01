@@ -1,5 +1,7 @@
 package uk.ac.ucl.cs.clonedetector.test;
 import static org.junit.Assert.*;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.junit.After;
 import org.junit.Before;
@@ -7,7 +9,7 @@ import org.junit.Test;
 
 import uk.ac.ucl.cs.clonedetector.Normalizer;
 
-public class NormalizerTest {
+public class NormalizerTest extends TestCase{
 String lang;
 
 Normalizer normlang;
@@ -68,5 +70,10 @@ Normalizer normnolang;
 		//Test that the correct keywords are loaded from the language and file extension
 		String keyword = normlang.getKeywords().substring(0, 8);
 		assertEquals(keyword, "abstract");
+	}
+	
+	public static TestSuite suite() {
+		TestSuite suite = new TestSuite(NormalizerTest.class);
+		return suite;
 	}
 }

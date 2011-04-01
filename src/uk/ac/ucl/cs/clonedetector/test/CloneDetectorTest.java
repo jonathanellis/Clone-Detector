@@ -11,6 +11,9 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +23,7 @@ import uk.ac.ucl.cs.clonedetector.CloneManager;
 import uk.ac.ucl.cs.clonedetector.Index;
 import uk.ac.ucl.cs.clonedetector.Reference;
 
-public class CloneDetectorTest {
+public class CloneDetectorTest extends TestCase{
 	
 	//Global fixtures for testing output to out and err
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -136,6 +139,11 @@ public class CloneDetectorTest {
 		c2.add(r,r2,r3,r4);
 		
         assertEquals(c.clones.toString(), c2.clones.toString());
+	}
+	
+	public static TestSuite suite() {
+		TestSuite suite = new TestSuite(CloneDetectorTest.class);
+		return suite;
 	}
 	
 }
