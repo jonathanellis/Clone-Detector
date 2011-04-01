@@ -1,6 +1,6 @@
 package uk.ac.ucl.cs.clonedetector;
 
-public class Reference implements Cloneable {
+public class Reference implements Cloneable, Comparable<Reference> {
 	private String filename;
 	private int line;
 	
@@ -25,11 +25,17 @@ public class Reference implements Cloneable {
 		return new Reference(filename, line+1);
 	}
 	
+	@Override
 	public Reference clone() {
 		return new Reference(filename, line);
 	}
 	
+	@Override
+	public String toString() {
+		return "(" + filename + ")" + line;
+	}
 	
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Reference) {
 			Reference r = (Reference)o;
@@ -37,5 +43,11 @@ public class Reference implements Cloneable {
 		}
 		return false;
 	}
+	
+	@Override
+	public int compareTo(Reference other) {
+		return new Integer(line).compareTo(new Integer(other.line));
+	}
+
 	
 }

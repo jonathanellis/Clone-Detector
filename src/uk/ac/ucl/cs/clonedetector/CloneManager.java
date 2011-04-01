@@ -10,6 +10,7 @@ public class CloneManager {
 		clones.add(new Clone(iStart, iEnd, jStart, jEnd));
 	}
 	
+	@Override
 	public String toString() {
 		Collections.sort(clones);
 		String result = "";

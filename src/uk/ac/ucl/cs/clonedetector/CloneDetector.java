@@ -40,6 +40,7 @@ public class CloneDetector {
 		BufferedReader in = new BufferedReader(new FileReader(filename));
 
 		while ((line = in.readLine()) != null) {
+			
 			String normalizedLine = normalizer.normalize(line);
 			BigInteger fingerprint = computeFingerprint(normalizedLine, algorithm);
 
@@ -64,9 +65,11 @@ public class CloneDetector {
 					iStart = null;
 					iEnd = null;
 					jStart = null;
+					jEnd = null;
 					jPrev = null;
 				}
 			}
+
 
 			index.updateIndex(fingerprint, iCurrent.clone());
 			iCurrent.incLine();

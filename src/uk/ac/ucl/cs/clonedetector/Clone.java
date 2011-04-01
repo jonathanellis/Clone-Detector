@@ -26,9 +26,12 @@ public class Clone implements Comparable<Clone> {
 	 */
 	public Clone(Reference iStart, Reference iEnd, Reference jStart, Reference jEnd) {
 		if (iStart.getLine() > jStart.getLine()) {
-			Reference temp = iStart;
+			Reference tempStart = iStart.clone();
+			Reference tempEnd = iEnd.clone();
 			iStart = jStart;
-			jStart = temp;
+			iEnd = jEnd;
+			jStart = tempStart;
+			jEnd = tempEnd;
 		}
 		
 		this.iStart = iStart;
@@ -36,24 +39,16 @@ public class Clone implements Comparable<Clone> {
 		this.jStart = jStart;
 		this.jEnd = jEnd;
 	}
-
-	@Override
-	public int compareTo(Clone arg0) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 	
 	public String toString() {
 		return String.format("(%s)%d-%d:(%s)%d-%d", this.iStart.getFilename(), this.iStart.getLine(), this.iEnd.getLine(), this.jStart.getFilename(), this.jStart.getLine(), this.jEnd.getLine());
 	}
 	
-/*	public int getiStart() { return iStart; }
-
-	@Override
-
+	public Reference getIStart() {
+		return iStart;
+	}
 	
-	@Override
 	public int compareTo(Clone other) {
-		return new Integer(iStart).compareTo(new Integer(other.getiStart()));
-	}*/
+		return iStart.compareTo(other.iStart);
+	}
 }
