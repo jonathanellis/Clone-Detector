@@ -98,7 +98,16 @@ public class CloneDetectorTest extends TestCase{
 		args[0] = "This_is_not_a_file_that_exits.tom";
 		CloneDetector.main(args);
 		assertTrue(errContent.toString().contains("File not found"));
+	}
 	
+	@Test
+	public void test_findClonesAlgotrithmNotFound() throws IOException {
+		//Test that the correct exception is thrown, and the correct message given to the user when a file does not exist
+		CloneDetector c = new CloneDetector();
+		String[] args = new String[1];
+		args[0] = "text/testing.java";
+		c.findClones("Tom's Algorithm", args);
+		assertTrue(errContent.toString().contains("No such algorithm"));
 	}
 	
 	@Test
@@ -140,6 +149,8 @@ public class CloneDetectorTest extends TestCase{
 		
         assertEquals(c.clones.toString(), c2.clones.toString());
 	}
+	
+	
 	
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite(CloneDetectorTest.class);

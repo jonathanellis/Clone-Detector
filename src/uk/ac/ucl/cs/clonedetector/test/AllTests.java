@@ -8,6 +8,7 @@ import junit.framework.TestSuite;
 public class AllTests  extends TestCase {
 	
 	public static TestSuite suite;
+	
 	public static Test suite(){
 		suite = new TestSuite();
 		suite.addTest(CloneDetectorTest.suite());
