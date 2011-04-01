@@ -3,14 +3,14 @@
 
 	<!-- set global properties for this build -->
 	<property name="src.dir" location="src" />
-	<property name="test.dir" location="src/uk/ac/ucl/cs/clonedetector/test" />
-	<property name="reports.tests" location="test-report" />
+	<property name="test.reports" location="test-report" />
 	<property name="lib.dir" value="lib" />
 	<property name="build.dir" location="build" />
 	<property name="javadoc.dir" value="javadoc" />
 	<property name="dist.dir" location="dist" />
 	<property name="debug" value="off" />
 	<property name="test.suite" value="uk.ac.ucl.cs.clonedetector.test.AllTests" />
+	<property name="test.dir" location="uk.ac.ucl.cs.clonedetector.test" />
 	
 
 
@@ -25,7 +25,7 @@
 		<delete dir="${build.dir}" quiet="true" />
 		<delete dir="${dist.dir}" quiet="true" />
 		<delete dir="${javadoc.dir}" quiet="true" />
-		<delete dir="${reports.tests}" quiet="true" />
+		<delete dir="${test.reports}" quiet="true" />
 	</target>
 
 	<target name="init">
@@ -33,7 +33,7 @@
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${dist.dir}/lib" />
 		<mkdir dir="${javadoc.dir}" />
-		<mkdir dir="${reports.tests}" />
+		<mkdir dir="${test.reports}" />
 	</target>
 
 	<target name="compile" description="compile the source ">
@@ -67,7 +67,7 @@
 	</target>
 	
 	<target name="test" description="Execute JUnit tests">
-		<junit fork="yes" haltonfailure="no">
+		<junit fork="yes" haltonfailure="yes" printsummary="yes">
 			<classpath>
 				<pathelement location="${build.dir}"/>
 				<fileset dir="${lib.dir}">
@@ -75,12 +75,18 @@
 				</fileset>
 			</classpath>	
 			
-			 <test name="${test.suite}" />
-			<formatter type="plain" usefile="false" />
-			
+			<test name="${test.suite}" todir="${test.reports}"/>
+			<formatter type="xml" />
 		</junit>
+			
+		<junitreport todir="${test.reports}">
+	    	<fileset dir="${test.reports}">
+	      		<include name="TEST-*.xml" />
+	    	</fileset>
+	    	<report todir="${test.reports}" />
+	  	</junitreport>
 	</target>
-
+	
 	<target name="all" depends="clean, init, compile, test, dist" />
 
 </project>
