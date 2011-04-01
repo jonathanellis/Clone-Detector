@@ -43,6 +43,7 @@ public class CloneTest extends TestCase {
 	
 	@Test
 	public void test_toString() {
+		//Test clones are output correctly
 		String output = "(filename)14-15:(filename)16-17";
 		assertEquals(c.toString(), output);
 		
@@ -52,37 +53,41 @@ public class CloneTest extends TestCase {
 	
 	@Test
 	public void test_getIStart() {
-		
+		//Test that istart is returned correctly
 		assertEquals(c.getIStart(), r);
 	}
 	
 	@Test
 	public void test_getLength() {
-		
+		//Test that length is correctly returned
 		assertEquals(c.getLength(), 1);
 	}
 	
 	@Test
 	public void test_encompasses() {
+		//New fixture for encompass tests
 		Reference r = new Reference("filename", 26);
 		Reference r2 =new Reference("filename", 28);
 		Reference r3 =new Reference("filename", 29);
 		Reference r4 =new Reference("filename", 20);
 		Clone c5 = new Clone(r,r2,r3,r4);
+		
+		//Test that non-ecompassing closes return false
 		assertEquals(c.encompasses(c5), false);
 		
+		//Test that encompassing clones return true
 		assertEquals(c.encompasses(c), true);
 		
-		//Test different file names for iStart and jSTart
+		//Test different file names for iStart and jSTart always return false
 		Reference r5 =new Reference("different", 20);
 		c5 = new Clone(r,r2,r5,r4);
 		assertEquals(c.encompasses(c5), false);
 		
 	}
 	
-	
 	@Test
 	public void test_compareTo() {
+		//Test clones are correctly compared
 		assertTrue(c.compareTo(c3) < 0);
 		assertTrue(c3.compareTo(c) > 0);
 	}
