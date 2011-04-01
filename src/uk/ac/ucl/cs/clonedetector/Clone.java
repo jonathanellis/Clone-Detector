@@ -78,6 +78,11 @@ public class Clone implements Comparable<Clone> {
 		return false;
 	}
 	
+	public boolean overlapsItself() {
+		return (jStart.getLine() <= iEnd.getLine() && jEnd.getLine() >= iEnd.getLine() ||
+				iStart.getLine() <= jEnd.getLine() && iEnd.getLine() >= jEnd.getLine());
+	}
+	
 	public int compareTo(Clone other) {
 		return iStart.compareTo(other.iStart);
 	}

@@ -3,13 +3,13 @@ package uk.ac.ucl.cs.clonedetector;
 import java.util.ArrayList;
 
 public class Options {
-	ArrayList<String> filenames = new ArrayList<String>();
-	int cloneMinLength = 2;	// Default value
-	String algorithm = "StringHashCode";	// Default value
+	private ArrayList<String> filenames = new ArrayList<String>();
+	private int cloneMinLength = 2;	// Default value
+	private String algorithm = "StringHashCode";	// Default value
 	
 	public Options(String[] args) {
 		// Parse arguments:
-		int mode = 0;
+		int mode = 0; // holds the mode we are in (0 = filenames, 1 = clone length, 2 = algorithm)
 		for (int i=0; i<args.length; i++) {
 			if (mode == 0) {
 				if (!args[i].equals("-l") && !args[i].equals("-a")) {
@@ -32,5 +32,16 @@ public class Options {
 		System.out.println("Algorithm: " + algorithm);*/
 	}
 	
+	public ArrayList<String> getFilenames() {
+		return filenames;
+	}
+	
+	public int getCloneMinLength() {
+		return cloneMinLength;
+	}
+	
+	public String getAlgorithm() {
+		return algorithm;
+	}
 	
 }

@@ -31,7 +31,19 @@ public class CloneManager {
 				goodClones.remove(d);
 			}
 		}
-				
+		
+		// Remove clones that overlap themselves:
+		ArrayList<Clone> toDelete = new ArrayList<Clone>();
+		for (Clone g : goodClones) {
+			if (g.overlapsItself()) {
+				toDelete.add(g);
+			}
+		}
+		
+		for (Clone d : toDelete) {
+			goodClones.remove(d);
+		}
+		
 		return goodClones;
 	}
 	
@@ -40,7 +52,7 @@ public class CloneManager {
 		Collections.sort(clones);
 		String result = "";
 		for (Clone c : coalesce()) {
-			if (c.getLength() >= CloneDetector.options.cloneMinLength) result += c.toString() + "\n";
+			if (c.getLength() >= CloneDetector.options.getCloneMinLength()) result += c.toString() + "\n";
 		}
 		return result.trim();
 	}

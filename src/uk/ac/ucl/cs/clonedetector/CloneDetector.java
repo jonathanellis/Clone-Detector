@@ -77,9 +77,9 @@ public class CloneDetector {
 	public void findClones() {
 		Index index = new Index();
 		
-		for (String filename: options.filenames) {
+		for (String filename: options.getFilenames()) {
 			try {				
-				index.updateIndex(filename, options.algorithm);
+				index.updateIndex(filename, options.getAlgorithm());
 			} catch (FileNotFoundException e) {
 				System.err.println("File not found!");
 			} catch (NoSuchAlgorithmException e) {
