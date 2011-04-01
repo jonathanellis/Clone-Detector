@@ -10,9 +10,6 @@
 	<property name="dist.dir" location="dist" />
 	<property name="debug" value="off" />
 	<property name="test.suite" value="uk.ac.ucl.cs.clonedetector.test.AllTests" />
-	<property name="test.dir" location="uk.ac.ucl.cs.clonedetector.test" />
-	
-
 
 	<path id="classpath">
 		<pathelement location="${build.dir}" />
@@ -52,7 +49,11 @@
 	<target name="dist" depends="compile" description="generate the distribution">
 		<jar 
 			basedir="${build.dir}"
-			jarfile="${dist.dir}/lib/clone.jar" />
+			jarfile="${dist.dir}/lib/clone.jar" >
+			<manifest>
+                <attribute name="Main-Class" value="uk.ac.ucl.cs.clonedetector.CloneDetector"/>
+			</manifest>
+		</jar>
 		
         <javadoc 
         	description="Generate Javadocs for the application" 
