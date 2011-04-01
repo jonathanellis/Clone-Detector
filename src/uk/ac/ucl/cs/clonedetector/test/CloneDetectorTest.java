@@ -22,6 +22,7 @@ import uk.ac.ucl.cs.clonedetector.Reference;
 
 public class CloneDetectorTest {
 	
+	//Global fixtures for testing output to out and err
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
@@ -29,11 +30,11 @@ public class CloneDetectorTest {
 	public void setUp() throws Exception {
 		System.setOut(new PrintStream(outContent));
 		System.setErr(new PrintStream(errContent));
-
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		//Reset fixtures
 		System.setOut(null);
 	    System.setErr(null);
 	}
@@ -95,18 +96,18 @@ public class CloneDetectorTest {
 	@Test
 	public void test_findClonesInFile() {
 		String[] args = new String[1];
-		args[0] = "text/testing.txt";
+		args[0] = "text/testing.java";
 		CloneDetector.main(args);
-		assertTrue(outContent.toString().contains("(text/testing.txt)1-4:(text/testing.txt)5-8"));
+		assertTrue(outContent.toString().contains("(text/testing.java)1-4:(text/testing.java)5-8"));
 	}
 	
 	@Test
 	public void test_findClonesInMulitpleFiles() {
 		String[] args = new String[2];
-		args[0] = "text/testing.txt";
-		args[1] = "text/testing.txt";
+		args[0] = "text/testing.java";
+		args[1] = "text/testing.java";
 		CloneDetector.main(args);
-		assertTrue(outContent.toString().contains("(text/testing.txt)1-8:(text/testing.txt)1-8"));
+		assertTrue(outContent.toString().contains("(text/testing.java)1-9:(text/testing.java)1-9"));
 	}
 	
 	@Test
@@ -116,12 +117,12 @@ public class CloneDetectorTest {
 		c = cd.findClones(new Index(),"text/emptyfile.txt","StringHashCode" );
 		
 		assertEquals(c.clones.toString(), new CloneManager().clones.toString());
-		c = cd.findClones(new Index(),"text/testing.txt","StringHashCode" );
+		c = cd.findClones(new Index(),"text/testing.java","StringHashCode" );
 		
-		Reference r = new Reference("text/testing.txt", 1);
-		Reference r2 = new Reference("text/testing.txt", 4);
-		Reference r3 = new Reference("text/testing.txt", 5);
-		Reference r4 = new Reference("text/testing.txt", 8);
+		Reference r = new Reference("text/testing.java", 1);
+		Reference r2 = new Reference("text/testing.java", 4);
+		Reference r3 = new Reference("text/testing.java", 5);
+		Reference r4 = new Reference("text/testing.java", 8);
 		
 		CloneManager c2 = new CloneManager();
 		c2.add(r,r2,r3,r4);
