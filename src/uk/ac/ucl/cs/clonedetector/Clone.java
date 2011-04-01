@@ -35,6 +35,12 @@ public class Clone implements Comparable<Clone> {
 	 *            length is the length of the collision
 	 */
 	public Clone(int iStart, int jStart, int length) {
+		if (iStart > jStart) {
+			int temp = iStart;
+			iStart = jStart;
+			jStart = temp;
+		}
+		
 		this.iStart = iStart;
 		this.jStart = jStart;
 		this.length = length;

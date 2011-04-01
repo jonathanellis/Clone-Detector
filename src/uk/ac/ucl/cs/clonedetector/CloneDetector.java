@@ -11,12 +11,6 @@ import java.util.ArrayList;
 
 public class CloneDetector {
 
-	/*
-	 * Variables for the findClones() method (and its related methods). The
-	 * variables are re-used each iteration for efficiency reasons. ("collider"
-	 * is what the collision is colliding with)
-	 */
-
 	private Index index = new Index();
 
 	/**
@@ -30,9 +24,8 @@ public class CloneDetector {
 	 * @throws NoSuchAlgorithmException
 	 *             Thrown if the algorithm is not available on the system.
 	 */
-	public ArrayList<Clone> findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
-		ArrayList<Clone> clones = new ArrayList<Clone>();
-		BufferedReader in = new BufferedReader(new FileReader(filename));
+	public CloneManager findClones(String filename, String algorithm) throws FileNotFoundException, IOException, NoSuchAlgorithmException {
+		CloneManager cloneManager = new CloneManager();
 		Normalizer normalizer = new Normalizer(getExtension(filename));
 		String line;
 		int lineNum = 1;
@@ -41,6 +34,8 @@ public class CloneDetector {
 		int jStart = -1;
 		int matchLength = -1;
 		int prevMatchingLine = -1;
+		
+		BufferedReader in = new BufferedReader(new FileReader(filename));
 
 		while ((line = in.readLine()) != null) {
 			String normalizedLine = normalizer.normalize(line);
@@ -56,13 +51,11 @@ public class CloneDetector {
 				jStart = earliestMatch;
 				matchLength = 1;
 			} else if (matchLength > -1) {
-				if (matchingLines.contains(prevMatchingLine + 1)) { // continue
-																	// match
+				if (matchingLines.contains(prevMatchingLine + 1)) { // continue match
 					matchLength++;
 					prevMatchingLine++;
 				} else { // end match
-					Clone c = new Clone(iStart, jStart, matchLength - 1);
-					clones.add(c);
+					cloneManager.add(iStart, jStart, matchLength - 1);
 					iStart = -1;
 					jStart = -1;
 					matchLength = -1;
@@ -72,7 +65,7 @@ public class CloneDetector {
 			index.updateIndex(fingerprint, lineNum);
 			lineNum++;
 		}
-		return clones;
+		return cloneManager;
 	}
 
 	/**
@@ -125,11 +118,9 @@ public class CloneDetector {
 		info(fileNames);
 		
 		for (int i = 1; i < fileNames.length; i++) {
-			ArrayList<Clone> clones;
 			try {
-				clones = findClones(fileNames[i], algorithm);
-				for (Clone clone : clones)
-					System.out.println(clone);
+				CloneManager clones = findClones(fileNames[i], algorithm);
+				System.out.println(clones);
 
 				if (fileNames.length > 1 && i < fileNames.length - 1)
 					System.out.println("");
