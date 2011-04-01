@@ -35,7 +35,6 @@ public Reference r;
 
 	@After
 	public void tearDown() throws Exception {
-		
 	}
 
 	

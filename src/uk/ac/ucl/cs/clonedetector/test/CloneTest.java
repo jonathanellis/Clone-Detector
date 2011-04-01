@@ -38,6 +38,7 @@ public class CloneTest extends TestCase {
 
 	@After
 	public void tearDown() throws Exception {
+		
 	}
 
 	
@@ -66,23 +67,24 @@ public class CloneTest extends TestCase {
 	@Test
 	public void test_encompasses() {
 		//New fixture for encompass tests
-		Reference r = new Reference("filename", 26);
-		Reference r2 =new Reference("filename", 28);
-		Reference r3 =new Reference("filename", 29);
-		Reference r4 =new Reference("filename", 20);
-		Clone c5 = new Clone(r,r2,r3,r4);
+		Reference re = new Reference("filename", 26);
+		Reference re2 =new Reference("filename", 28);
+		Reference re3 =new Reference("filename", 29);
+		Reference re4 =new Reference("filename", 20);
 		
-		//Test that non-ecompassing closes return false
+		//A clones that is not encompassed by c
+		Clone c5 = new Clone(re,re2,re3,re4);
+		
+		//Test that non-encompassing clones return false
 		assertEquals(c.encompasses(c5), false);
 		
-		//Test that encompassing clones return true
+		//Test that encompassing clones (or same in this case) return true
 		assertEquals(c.encompasses(c), true);
 		
-		//Test different file names for iStart and jSTart always return false
-		Reference r5 =new Reference("different", 20);
-		c5 = new Clone(r,r2,r5,r4);
+		//Test that different file names for iStart and jStart always return false
+		Reference re5 =new Reference("different", 20);
+		c5 = new Clone(re,re2,re5,re4);
 		assertEquals(c.encompasses(c5), false);
-		
 	}
 	
 	@Test
