@@ -77,7 +77,8 @@ public class CloneManagerTest extends TestCase {
 	}
 	
 	@Test
-	public void test_toString() {
+	public void test_Add_and_toString() {
+		//Test an empty clone manager returns nothing
 		assertEquals(c.toString(), "");
 		
 		
