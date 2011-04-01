@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class CloneManager {
-	ArrayList<Clone> clones = new ArrayList<Clone>();
+	public ArrayList<Clone> clones = new ArrayList<Clone>();
 	
 	public void add(Reference iStart, Reference iEnd, Reference jStart, Reference jEnd) {
 		clones.add(new Clone(iStart, iEnd, jStart, jEnd));
