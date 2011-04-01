@@ -59,11 +59,13 @@ Normalizer normnolang;
 	
 	@Test
 	public void test_getLanguage(){
+		//Test that the correct language is returned from the file extension
 		assertEquals(normlang.getLanguage(), "java");
 	}
 	
 	@Test
 	public void test_getKeywords(){
+		//Test that the correct keywords are loaded from the language and file extension
 		String keyword = normlang.getKeywords().substring(0, 8);
 		assertEquals(keyword, "abstract");
 	}

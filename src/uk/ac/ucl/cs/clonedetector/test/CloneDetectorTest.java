@@ -40,11 +40,13 @@ public class CloneDetectorTest {
 	}
 
 	
+	//Test that ZERO is return when empty string is fingerprinted
 	@Test
 	public void test_computeFingerprint() throws NoSuchAlgorithmException {
 		assertEquals(CloneDetector.computeFingerprint("", "MD5"), BigInteger.ZERO);
 	}
 	
+	//Test to get correct extension from a file
 	@Test
 	public void test_getExtension() {
 		//Tests for cases which should return ""
@@ -59,26 +61,28 @@ public class CloneDetectorTest {
 		assertEquals(CloneDetector.getExtension("path/to/code.pl"), "pl");
 		assertEquals(CloneDetector.getExtension("path/to.a.file.with.lots.of.dots/to/code.pl"), "pl");
 	
+		//Tests for absurd extensions
 		assertEquals(CloneDetector.getExtension("path/to/code.thisisaveryniceextensiontohave"), "thisisaveryniceextensiontohave");
 		assertEquals(CloneDetector.getExtension("path/to.a.file.with.lots.of.dots/to/code.thisisaveryniceextensiontohave"), "thisisaveryniceextensiontohave");
 	}
 	
 	@Test
 	public void test_computeFingerPrint() throws NoSuchAlgorithmException {
+		//Test that correct HashCode is returned by computeFingerprint()
 		BigInteger result = CloneDetector.computeFingerprint("thisisanicelineisntit", "StringHashCode");
 		assertEquals(result, BigInteger.valueOf("thisisanicelineisntit".hashCode()));
 		
+		//Test that computeFingerprint() returns correct fingerprint using MD5
 		result = CloneDetector.computeFingerprint("thisisanicelineisntit", "MD5");
-		
 		MessageDigest m = MessageDigest.getInstance("MD5");
 		m.update("thisisanicelineisntit".getBytes(), 0, "thisisanicelineisntit".length());
 		BigInteger testvalue = new BigInteger(1, m.digest());
-		
 		assertEquals(testvalue, result);
 	}
 	
 	@Test
 	public void test_MainUsage(){
+		//Test that USAGE information is output to the user when no filesname are given
 		String[] args = new String[0];
 		CloneDetector.main(args);
 		assertTrue(outContent.toString().contains("USAGE: java -jar clone.java <filename(s)>"));
@@ -86,6 +90,7 @@ public class CloneDetectorTest {
 	
 	@Test
 	public void test_findClonesFileNotFound() throws IOException {
+		//Test that the correct exception is thrown, and the correct message given to the user when a file does not exist
 		String[] args = new String[1];
 		args[0] = "This_is_not_a_file_that_exits.tom";
 		CloneDetector.main(args);
@@ -95,6 +100,7 @@ public class CloneDetectorTest {
 	
 	@Test
 	public void test_findClonesInFile() {
+		//Test for correct clone detection in a single java file
 		String[] args = new String[1];
 		args[0] = "text/testing.java";
 		CloneDetector.main(args);
@@ -103,6 +109,7 @@ public class CloneDetectorTest {
 	
 	@Test
 	public void test_findClonesInMulitpleFiles() {
+		//Test for correct clone detection in multiple java files
 		String[] args = new String[2];
 		args[0] = "text/testing.java";
 		args[1] = "text/testing.java";
@@ -112,6 +119,7 @@ public class CloneDetectorTest {
 	
 	@Test
 	public void test_findClones() throws FileNotFoundException, NoSuchAlgorithmException, IOException{
+		//Tests that the correct CloneManager objects are created containing the correct clones
 		CloneManager c = new CloneManager();
 		CloneDetector cd = new CloneDetector();
 		c = cd.findClones(new Index(),"text/emptyfile.txt","StringHashCode" );
