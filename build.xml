@@ -3,15 +3,13 @@
 
 	<!-- set global properties for this build -->
 	<property name="src.dir" location="src" />
-	<property name="test.dir" location="src/uk/ac/ucl/cs/clonedetector/test" />
-	<property name="reports.tests" location="test-report" />
+	<property name="test.reports" location="test-report" />
 	<property name="lib.dir" value="lib" />
 	<property name="build.dir" location="build" />
 	<property name="javadoc.dir" value="javadoc" />
 	<property name="dist.dir" location="dist" />
 	<property name="debug" value="off" />
-	
-
+	<property name="test.suite" value="uk.ac.ucl.cs.clonedetector.test.AllTests" />
 
 	<path id="classpath">
 		<pathelement location="${build.dir}" />
@@ -24,7 +22,7 @@
 		<delete dir="${build.dir}" quiet="true" />
 		<delete dir="${dist.dir}" quiet="true" />
 		<delete dir="${javadoc.dir}" quiet="true" />
-		<delete dir="${reports.tests}" quiet="true" />
+		<delete dir="${test.reports}" quiet="true" />
 	</target>
 
 	<target name="init">
@@ -32,7 +30,7 @@
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${dist.dir}/lib" />
 		<mkdir dir="${javadoc.dir}" />
-		<mkdir dir="${reports.tests}" />
+		<mkdir dir="${test.reports}" />
 	</target>
 
 	<target name="compile" description="compile the source ">
@@ -51,7 +49,11 @@
 	<target name="dist" depends="compile" description="generate the distribution">
 		<jar 
 			basedir="${build.dir}"
-			jarfile="${dist.dir}/lib/clone.jar" />
+			jarfile="${dist.dir}/lib/clone.jar" >
+			<manifest>
+                <attribute name="Main-Class" value="uk.ac.ucl.cs.clonedetector.CloneDetector"/>
+			</manifest>
+		</jar>
 		
         <javadoc 
         	description="Generate Javadocs for the application" 
@@ -66,22 +68,26 @@
 	</target>
 	
 	<target name="test" description="Execute JUnit tests">
-		<junit>
+		<junit fork="yes" haltonfailure="no" printsummary="yes">
 			<classpath>
-				<pathelement location="${build.tests}"/>
+				<pathelement location="${build.dir}"/>
 				<fileset dir="${lib.dir}">
 					<include name="**/*.jar" />
 				</fileset>
-			</classpath>		
+			</classpath>	
 			
-			<formatter type="plain"/>
-			
-			<batchtest fork="yes" todir="${reports.tests}">
-			    <fileset dir="${test.dir}"/>
-			</batchtest>
+			<test name="${test.suite}" todir="${test.reports}"/>
+			<formatter type="xml" />
 		</junit>
+			
+		<junitreport todir="${test.reports}">
+	    	<fileset dir="${test.reports}">
+	      		<include name="TEST-*.xml" />
+	    	</fileset>
+	    	<report todir="${test.reports}" />
+	  	</junitreport>
 	</target>
-
-	<target name="all" depends="clean, init, test, compile, dist" />
+	
+	<target name="all" depends="clean, init, compile, test, dist" />
 
 </project>

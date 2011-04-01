@@ -21,12 +21,14 @@ public class ReferenceTest extends TestCase{
 public Reference r;
 public Reference r2;
 public Reference r3;
+public Reference r4;
 	@Before
 	public void setUp() throws Exception {
 		//Fixtures for three different references
 		r = new Reference("filename", 14);
 		r2 = new Reference("filenames", 124);
 		r3 = new Reference("filenamess", 4);
+		r4 = new Reference("filenamess", 4, r);
 	}
 
 	@After
@@ -47,16 +49,22 @@ public Reference r3;
 	}
 	
 	@Test
+	public void test_next(){
+		
+		assertEquals(r4.next(), r);
+	}
+	
+	@Test
+	public void test_setNext(){
+		r4.setNext(r2);
+		assertEquals(r4.next(), r2);
+	}
+	
+	@Test
 	public void test_incLine(){
 		//Test that the line is incremented correctly
 		r.incLine();
 		assertEquals(r.getLine(), 15);
-	}
-	
-	@Test
-	public void test_successor(){
-		//Test that correct successor reference is returned
-		assertEquals(r.successor(),new Reference("filename", 15) );
 	}
 	
 	@Test

@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-import uk.ac.ucl.cs.clonedetector.CloneDetector;
+import uk.ac.ucl.cs.clonedetector.Index;
 
 public class Benchmark {
 
@@ -18,7 +18,7 @@ public class Benchmark {
 			String line;
 
 			while ((line = in.readLine()) != null) {
-				CloneDetector.computeFingerprint(line, args[0]);
+				Index.computeFingerprint(line, args[0]);
 			}
 			long t2 = System.currentTimeMillis();
 			System.out.println(t2 - t1);
