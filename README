@@ -5,7 +5,7 @@
 4.	MARK LLEWELYN
 
 [COMPILE]
-1. 	run 'ant' on root directory.
+1. 	run 'ant' on root directory from terminal.
 	This compiles the program, creates the javadoc, executes jUnit tests, and 
 	outputs a clone.jar file in dist/lib directory 
 
