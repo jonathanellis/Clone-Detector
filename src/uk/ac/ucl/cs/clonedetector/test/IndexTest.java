@@ -2,7 +2,9 @@ package uk.ac.ucl.cs.clonedetector.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,18 +21,16 @@ import uk.ac.ucl.cs.clonedetector.Index;
 import uk.ac.ucl.cs.clonedetector.Reference;
 
 public class IndexTest extends TestCase {
-public Reference r;
 public Index i;
-public Index i2;
+public Reference r;
+
 
 	@Before
 	public void setUp() throws Exception {
-		//Fixtures for a single reference within two seperate Indexes
-		r = new Reference("filename", 14);
 		i = new Index();
-		i2 = new Index();
-		i.updateIndex(BigInteger.ONE, r);
-		i2.updateIndex(BigInteger.ZERO, r);
+		r = new Reference("filename", 14);
+		i.add(BigInteger.ONE, r);
+		i.updateIndex("text/testing.java", "StringHashCode");
 	}
 
 	@After
@@ -40,13 +40,25 @@ public Index i2;
 
 	
 	@Test
-	public void test_lookup(){
-		//Test that the previous updateIndex worked correctly
-		//Test that the correct reference array is returned
-		assertEquals(i.lookup(BigInteger.ZERO), new ArrayList<Reference>());
-		assertEquals(i.lookup(BigInteger.ONE),new ArrayList<Reference>(Arrays.asList(r)));
-		assertEquals(i2.lookup(BigInteger.ZERO), new ArrayList<Reference>());
+	public void test_computeFingerprint() throws NoSuchAlgorithmException {
+		assertEquals(Index.computeFingerprint("", "MD5"), BigInteger.ZERO);
+		
+		assertEquals(Index.computeFingerprint("thisisaline", "StringHashCode"), BigInteger.valueOf("thisisaline".hashCode()));
+		
+		MessageDigest m = MessageDigest.getInstance("MD5");
+		m.update("thisisaline".getBytes(), 0, "thisisaline".length());
+		BigInteger fingerprint = new BigInteger(1, m.digest());
+		
+		assertEquals(Index.computeFingerprint("thisisaline", "MD5"), fingerprint);
 	}
+	
+	@Test
+	public void test_lookup(){
+		assertEquals(i.lookup(r), BigInteger.ONE);
+		assertEquals(i.lookup(BigInteger.TEN), new ArrayList<Reference>());
+		assertEquals(i.lookup(BigInteger.ONE).get(0), r );
+	}
+
 	
 public static TestSuite suite() {
 	TestSuite suite = new TestSuite(IndexTest.class);

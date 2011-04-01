@@ -62,6 +62,10 @@ public class CloneTest extends TestCase {
 		assertTrue(c3.compareTo(c) > 0);
 	}
 	
+	
+	
+	
+	
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite(CloneTest.class);
 		return  suite;
